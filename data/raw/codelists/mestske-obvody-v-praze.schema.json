@@ -1,0 +1,51 @@
+{
+  "id": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ciselnik-mestskych-obvodu-v-praze",
+  "type": "object",
+  "description": "Prvek RÚIAN typu Území městského obvodu v hlavním městě Praze",
+  "x-docUrl": "https://data.mpsv.cz/web/data/-/ciselnik-mestskych-obvodu-v-praze",
+  "properties": {
+    "polozky": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 129
+          },
+          "kod": {
+            "type": "integer"
+          },
+          "nazev": {
+            "type": [
+              "object"
+            ],
+            "properties": {
+              "cs": {
+                "type": [
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "cs"
+            ]
+          },
+          "obec": {
+            "x-looseRef": "/od/soubory/ciselniky/obce.schema.json",
+            "type": "string",
+            "maxLength": 129
+          }
+        },
+        "required": [
+          "id",
+          "kod",
+          "nazev",
+          "obec"
+        ]
+      }
+    }
+  }
+}

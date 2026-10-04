@@ -1,0 +1,635 @@
+{
+  "generated_at_utc": "2026-10-03T17:02:44.800120+00:00",
+  "files": [
+    {
+      "path": "data/raw/codelists/casti-obci.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/casti-obci.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:16.005355+00:00",
+      "compressed_or_file_bytes": 235138,
+      "uncompressed_bytes": 2215070,
+      "sha256": "54c78a8cc1924d1da9664567547411bc8fa8f07f870ecac716f55c363cd22aae",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/casti-obci.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/casti-obci.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:16.466541+00:00",
+      "compressed_or_file_bytes": 1178,
+      "uncompressed_bytes": 1178,
+      "sha256": "e96256fb9d05b93677d96dcff20cbd03225271b4f99baa5d377c3ef3587cb011",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/cz-isco-metadata.jsonld",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco-metadata.jsonld",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:30.630091+00:00",
+      "compressed_or_file_bytes": 10465,
+      "uncompressed_bytes": 10465,
+      "sha256": "1c5831cc4c570aca9a81924112bb67c81a1f4283b2f74d772224e1dd9356095a",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/cz-isco.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:16.688784+00:00",
+      "compressed_or_file_bytes": 42200,
+      "uncompressed_bytes": 813597,
+      "sha256": "5deef27c32f8fbcd3645bb06f930a2bd50fa3fa9020dd1796dd29d0165c19660",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/cz-isco.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:16.869736+00:00",
+      "compressed_or_file_bytes": 2568,
+      "uncompressed_bytes": 2568,
+      "sha256": "5ce60652d9f8659c1a7835b0308a2eb70feca4f655cc2ae121764888528dff89",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/dovednosti.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/dovednosti.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:17.126630+00:00",
+      "compressed_or_file_bytes": 2311,
+      "uncompressed_bytes": 15546,
+      "sha256": "73114adfda9b787852fe9dfb85dbb52393241c26586e94679e336b0731f468e6",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/dovednosti.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/dovednosti.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:17.320558+00:00",
+      "compressed_or_file_bytes": 998,
+      "uncompressed_bytes": 998,
+      "sha256": "3ddb6acfcb3c996f2fa3a123cba672fa7ddfb9b97dc6311f835603a23589f01a",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/jazyky.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/jazyky.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:17.514755+00:00",
+      "compressed_or_file_bytes": 408,
+      "uncompressed_bytes": 2493,
+      "sha256": "88e400618d463e17e10fba5fde8527046e757f68d3aae2addeb7af2f36454e81",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/jazyky.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/jazyky.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:17.683737+00:00",
+      "compressed_or_file_bytes": 986,
+      "uncompressed_bytes": 986,
+      "sha256": "f868daa1988e4f4d4a292db1f5071a7d17c7007ee98e39d8894af33e258d568e",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/kontaktni-pracoviste.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/kontaktni-pracoviste.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:17.875601+00:00",
+      "compressed_or_file_bytes": 4243,
+      "uncompressed_bytes": 40793,
+      "sha256": "55e4b6013e14e708edc0d8b9cd749fadb452f70c8ec4d263feffb14c92427926",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/kontaktni-pracoviste.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/kontaktni-pracoviste.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:18.055438+00:00",
+      "compressed_or_file_bytes": 1109,
+      "uncompressed_bytes": 1109,
+      "sha256": "dd047a8f12e1f5aecce218ce0f21fffc2149a6edd0a9c024c955a9992371a9a7",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/kraje.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/kraje.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:18.270066+00:00",
+      "compressed_or_file_bytes": 404,
+      "uncompressed_bytes": 2004,
+      "sha256": "7e7d4b99dca814ac9f44f45c99fe41e8d397c5378024502092bb8d8c85245e49",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/kraje.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/kraje.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:18.459998+00:00",
+      "compressed_or_file_bytes": 1159,
+      "uncompressed_bytes": 1159,
+      "sha256": "9a9e95f092a1f2de55f060bced199e91ceae02c09bdaee878828960442261604",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/mestske-obvody-mestske-casti.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/mestske-obvody-mestske-casti.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:18.657117+00:00",
+      "compressed_or_file_bytes": 2511,
+      "uncompressed_bytes": 26435,
+      "sha256": "521f3afd996a5bb18e09cf2a91091e547460a5fbf709e7b2fba0fe21b25a4763",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/mestske-obvody-mestske-casti.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/mestske-obvody-mestske-casti.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:18.894172+00:00",
+      "compressed_or_file_bytes": 1469,
+      "uncompressed_bytes": 1469,
+      "sha256": "c1e971ce9552135768b76387f988a96f7240fc14c6479a4d064d342288b9d656",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/mestske-obvody-v-praze.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/mestske-obvody-v-praze.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:19.125831+00:00",
+      "compressed_or_file_bytes": 233,
+      "uncompressed_bytes": 1474,
+      "sha256": "8b629cac28539b63f25653a91f2b9f019b2b2f889f0ad53db3d842c944ca15b8",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/mestske-obvody-v-praze.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/mestske-obvody-v-praze.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:19.373379+00:00",
+      "compressed_or_file_bytes": 1222,
+      "uncompressed_bytes": 1222,
+      "sha256": "2a5d5eff9ec29090b73cb73f7d17e168e3e4a2cbc46867c37409e176c4519d7a",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/obce.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/obce.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:19.631787+00:00",
+      "compressed_or_file_bytes": 85831,
+      "uncompressed_bytes": 900386,
+      "sha256": "e9114d0918448e070b62242b96fa51865244f05ce880e33358dfa6bf95da3f8d",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/obce.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/obce.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:19.817426+00:00",
+      "compressed_or_file_bytes": 1162,
+      "uncompressed_bytes": 1162,
+      "sha256": "8a3ac699076021bbf25ebb6fd605332beb575eb0b5dd85e497a87dcc60a5c6c6",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/okresy.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/okresy.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:19.992007+00:00",
+      "compressed_or_file_bytes": 1658,
+      "uncompressed_bytes": 12786,
+      "sha256": "657a38235e119a92ab6a752ca086892ee75b9c1dbe49685c301ef9820fdd8702",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/okresy.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/okresy.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:20.157299+00:00",
+      "compressed_or_file_bytes": 1337,
+      "uncompressed_bytes": 1337,
+      "sha256": "34b947a89ef3038df78f40ffb5e79eaf9538fa07482672d99ffa4e7b65bfae41",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/pracovnepravni-vztahy.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/pracovnepravni-vztahy.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:20.367834+00:00",
+      "compressed_or_file_bytes": 239,
+      "uncompressed_bytes": 753,
+      "sha256": "d275d05b2b993a6951babca2a746b4fd03b8af204a26d1c035daf135f86a905d",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/pracovnepravni-vztahy.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/pracovnepravni-vztahy.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:20.549114+00:00",
+      "compressed_or_file_bytes": 1040,
+      "uncompressed_bytes": 1040,
+      "sha256": "8760612024c866f75d3b294aba64ba5499b0dae2eb9e6f2d3e91faef12afbb27",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/smennosti.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/smennosti.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:20.832072+00:00",
+      "compressed_or_file_bytes": 321,
+      "uncompressed_bytes": 1311,
+      "sha256": "105fd5d3330b4e335cb8c0175a2c41099f7f8d5e0f62a655e154d860e5ca534c",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/smennosti.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/smennosti.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:21.018664+00:00",
+      "compressed_or_file_bytes": 992,
+      "uncompressed_bytes": 992,
+      "sha256": "361aaaa7e49df0cd1fea3e2e433b73436a8010361c14472f94ed7259c57a66b0",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/typy-mista-vykonu-prace.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-mista-vykonu-prace.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:21.250097+00:00",
+      "compressed_or_file_bytes": 229,
+      "uncompressed_bytes": 811,
+      "sha256": "b6cd00f0dacd3a449d4f3a72c2dcfd2889679a0fe90be706c8cd624d5119d79e",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/typy-mista-vykonu-prace.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-mista-vykonu-prace.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:21.437459+00:00",
+      "compressed_or_file_bytes": 1040,
+      "uncompressed_bytes": 1040,
+      "sha256": "fc773dc0eb4f91408135f271538fa314dd67b884bb29c14ddb5dea00e7724cd2",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/typy-mzdy.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-mzdy.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:21.652988+00:00",
+      "compressed_or_file_bytes": 126,
+      "uncompressed_bytes": 248,
+      "sha256": "7ed03eadaabbb1d5cb321c13ecc12a5e7abb23ec0b0f2ee16ba3968d0929736c",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/typy-mzdy.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-mzdy.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:21.902362+00:00",
+      "compressed_or_file_bytes": 1010,
+      "uncompressed_bytes": 1010,
+      "sha256": "c76db1905bdf7d6b03a237364eff56f348a03211f0bb50c845940428e0f72123",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/typy-stavebniho-objektu.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-stavebniho-objektu.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:22.109238+00:00",
+      "compressed_or_file_bytes": 210,
+      "uncompressed_bytes": 584,
+      "sha256": "6038d3fc68e4094aa79fd2b27dfe036dc835e54051a9154ac7b735028eccbba4",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/typy-stavebniho-objektu.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-stavebniho-objektu.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:22.322519+00:00",
+      "compressed_or_file_bytes": 1057,
+      "uncompressed_bytes": 1057,
+      "sha256": "e2ec61354f9a56eb67354e1bcb5683e8b20ef288f767504f2c3f57987854821d",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/typy-zmen-opendata.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-zmen-opendata.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:22.526413+00:00",
+      "compressed_or_file_bytes": 39,
+      "uncompressed_bytes": 19,
+      "sha256": "661ab88cf01e9915771ebcc2a063cb10a2b34bd45c4143788e1831c65c3d3f44",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/typy-zmen-opendata.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/typy-zmen-opendata.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:22.741301+00:00",
+      "compressed_or_file_bytes": 1000,
+      "uncompressed_bytes": 1000,
+      "sha256": "f33fa1e9a205c513a427d228233bf3e44769bbb7ebc85935d8768149abe05dd9",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/urovne-znalosti-jazyka.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/urovne-znalosti-jazyka.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:22.956931+00:00",
+      "compressed_or_file_bytes": 160,
+      "uncompressed_bytes": 401,
+      "sha256": "5b5ec63e82e89a168331bf4db0afcfe71ba558a915637feafe6cee2a89151075",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/urovne-znalosti-jazyka.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/urovne-znalosti-jazyka.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:23.161054+00:00",
+      "compressed_or_file_bytes": 1035,
+      "uncompressed_bytes": 1035,
+      "sha256": "9bb79c66be2d336ce7578d29d5f69ca4c7cd83043ce96ad95a610518ca92dd83",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/vhodnosti-pro-typ-zamestnance.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vhodnosti-pro-typ-zamestnance.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:26.637584+00:00",
+      "compressed_or_file_bytes": 328,
+      "uncompressed_bytes": 1091,
+      "sha256": "7d4885c13d213f026c54abe208a940a8003bdc109f640c63aab72e7ca04f6eb3",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/vhodnosti-pro-typ-zamestnance.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vhodnosti-pro-typ-zamestnance.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:27.021542+00:00",
+      "compressed_or_file_bytes": 1077,
+      "uncompressed_bytes": 1077,
+      "sha256": "96c2a6c117a7733fc504c5f2ce7f95671725447fd03a52954c2869efe8ba83df",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/vyhody-volneho-mista.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vyhody-volneho-mista.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:27.459887+00:00",
+      "compressed_or_file_bytes": 332,
+      "uncompressed_bytes": 1365,
+      "sha256": "68317d2014086a9b4d8cd3798af461c65f1907bfeedd41f25ef0785078450c83",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/vyhody-volneho-mista.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vyhody-volneho-mista.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:27.932994+00:00",
+      "compressed_or_file_bytes": 1044,
+      "uncompressed_bytes": 1044,
+      "sha256": "7f31986057de98c057f58e0d094675d9ce30226393e90837b9165fae5c350832",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/vzdelani-detailni-kategorie.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vzdelani-detailni-kategorie.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:28.236265+00:00",
+      "compressed_or_file_bytes": 491,
+      "uncompressed_bytes": 2509,
+      "sha256": "80944dccf1c5011a01e05ee44ff04f9aa35ee5dd1cb898786a1e4e84a419c276",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/vzdelani-detailni-kategorie.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vzdelani-detailni-kategorie.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:28.664986+00:00",
+      "compressed_or_file_bytes": 1063,
+      "uncompressed_bytes": 1063,
+      "sha256": "ad97ad929547f50222d0bed662c30372d7464fbe7f52a1774f2e1c202b768199",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/vzdelani-kkov.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vzdelani-kkov.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:29.014432+00:00",
+      "compressed_or_file_bytes": 17609,
+      "uncompressed_bytes": 223116,
+      "sha256": "04e87d9c631635f5726915021be5c7bfe7aa988b185c68b0fa571fe77842808a",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/vzdelani-kkov.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/vzdelani-kkov.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:29.542514+00:00",
+      "compressed_or_file_bytes": 1154,
+      "uncompressed_bytes": 1154,
+      "sha256": "7425afa34eb2ac2f39bd544446e00e961200e2f60d8a0cf9b88d8ca0cc5fc385",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/codelists/zverejnovat-vpm.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/zverejnovat-vpm.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:29.977529+00:00",
+      "compressed_or_file_bytes": 209,
+      "uncompressed_bytes": 577,
+      "sha256": "267fd8048c35806a7335edb03e0055f354e24d57d328ce304c0a54c044734b94",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/codelists/zverejnovat-vpm.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/ciselniky/zverejnovat-vpm.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:49:30.303509+00:00",
+      "compressed_or_file_bytes": 1070,
+      "uncompressed_bytes": 1070,
+      "sha256": "6550b74433298987cae4b15102b71b85ff913bd1c132d0ec19469dc06c7327c6",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/unemployment/podil-nezamestnanych-osob-adresa-retrieved-2026-10-03.json",
+      "source_url": "https://data.mpsv.cz/portal/api/reports/by-table/evid_pno_adresa_agr_frz_odata/data/json?unbounded=true",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:47:50.260332+00:00",
+      "compressed_or_file_bytes": 147039286,
+      "uncompressed_bytes": 147039286,
+      "sha256": "c0b5a51227836d8f6a49181fa734662f78d70f0d8d442b792bbf9fe528c8568f",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/unemployment/podil-nezamestnanych-osob-adresa.schema.json",
+      "source_url": "https://data.mpsv.cz/portal/api/reports/by-table/evid_pno_adresa_agr_frz_odata/schema/json?title=podil_nezamestnanych_osob_trvala_kontaktni_adresa_metadata",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:47:39.187627+00:00",
+      "compressed_or_file_bytes": 2114,
+      "uncompressed_bytes": 2114,
+      "sha256": "1de332967b37582e59c917debd6436ec0a0073102006426acfeceaded501f4b4",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/unemployment/uchazeci-a-volna-mista-12-2024.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/uchazeci-a-volna-mista/uchazeci-a-volna-mista-12-2024.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:47:38.733832+00:00",
+      "compressed_or_file_bytes": 2013,
+      "uncompressed_bytes": 21727,
+      "sha256": "de71ed754de489e3692b627dcc96c6171042eca1191fd445250c5d0ddc730d7c",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/unemployment/uchazeci-a-volna-mista.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/uchazeci-a-volna-mista/uchazeci-a-volna-mista.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:47:39.584233+00:00",
+      "compressed_or_file_bytes": 3131,
+      "uncompressed_bytes": 3131,
+      "sha256": "55beee009137baa8668800a76d9472302503b29d6598fcdd30b93b4386a2291a",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/vacancies/full/volna-mista-retrieved-2026-10-03.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista/volna-mista.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:30.135506+00:00",
+      "compressed_or_file_bytes": 17368295,
+      "uncompressed_bytes": 185573692,
+      "sha256": "6fdc720ea1d109187210e02eafc221e1d803089f3687921d08345a3b27b35e96",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-09-22.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-09-22.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:29.779322+00:00",
+      "compressed_or_file_bytes": 1167280,
+      "uncompressed_bytes": 12529734,
+      "sha256": "07dc1adbcfb0ef6da29f195fea14ac008b1d3e9b0b48c0a45b705b9e827e374d",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-09-23.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-09-23.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:29.440635+00:00",
+      "compressed_or_file_bytes": 1446156,
+      "uncompressed_bytes": 15656884,
+      "sha256": "05aa77b5bc07e7c4fdf4ea0f8c8edb8486546940b5eceb7ff34cb442f86149bd",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-09-24.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-09-24.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:29.370937+00:00",
+      "compressed_or_file_bytes": 1110708,
+      "uncompressed_bytes": 11831141,
+      "sha256": "e35f7b35ede6c94c0a5bc71952aaec759664a28aa1e8b2b5fbfb554a2bccc357",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-09-25.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-09-25.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:33.314459+00:00",
+      "compressed_or_file_bytes": 892190,
+      "uncompressed_bytes": 9837123,
+      "sha256": "26ecd6e5528c8c6b7bf0d8748f30f5406826c450d84968a14f124678a6f35363",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-09-26.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-09-26.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:31.253270+00:00",
+      "compressed_or_file_bytes": 892273,
+      "uncompressed_bytes": 9837123,
+      "sha256": "ed3673f52958280513ff5b74d005f1769e9fcf0b100b552309cc37deba72ed7f",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-09-27.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-09-27.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:29.764978+00:00",
+      "compressed_or_file_bytes": 3046449,
+      "uncompressed_bytes": 28939405,
+      "sha256": "1c4b495405bbe284290bc196fc02efb9c0bb799f5eb22c195a690bcf94630248",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-09-30.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-09-30.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:29.824558+00:00",
+      "compressed_or_file_bytes": 1353022,
+      "uncompressed_bytes": 14168532,
+      "sha256": "1f26bd92c3e0a28953d8b8bb754ed8e986fa442db4234928cc86747692f1f2b7",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-10-01.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-10-01.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:28.712291+00:00",
+      "compressed_or_file_bytes": 535882,
+      "uncompressed_bytes": 5343733,
+      "sha256": "b31000f4d6d5206d827cb9b5a85144c0115c3ec288d7c71b814f894ae53966f3",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/increments/volna-mista-prirustek-2026-10-02.json.gz",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-2026-10-02.json.gz",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:28.668755+00:00",
+      "compressed_or_file_bytes": 768269,
+      "uncompressed_bytes": 7632755,
+      "sha256": "189e9336cdf8eb7bf8164eee1674debdc790f42c2e3353e7a9212116bc4c1bd0",
+      "encoding": "UTF-8",
+      "compression": "gzip"
+    },
+    {
+      "path": "data/raw/vacancies/schema/volna-mista-metadata.jsonld",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista/volna-mista-metadata.jsonld",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:29.675775+00:00",
+      "compressed_or_file_bytes": 10488,
+      "uncompressed_bytes": 10488,
+      "sha256": "e6c4b0a6f3ffb86c34583af210d1cc26f6fce5f252ea989b4ee7565ea1be3d49",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/vacancies/schema/volna-mista-prirustek-metadata.jsonld",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek-metadata.jsonld",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:47:37.361656+00:00",
+      "compressed_or_file_bytes": 7682,
+      "uncompressed_bytes": 7682,
+      "sha256": "d0792d4314bc1995606dbca9c3ce4a1bfd594e774c365edfc95444e0eb609ce9",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/vacancies/schema/volna-mista-prirustek.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista-prirustek/volna-mista-prirustek.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:47:38.931188+00:00",
+      "compressed_or_file_bytes": 35578,
+      "uncompressed_bytes": 35578,
+      "sha256": "838822c784aca4757e7a7cdd0774598f6ea73bbc462e72c1309d72c41f86139c",
+      "encoding": "UTF-8",
+      "compression": null
+    },
+    {
+      "path": "data/raw/vacancies/schema/volna-mista.schema.json",
+      "source_url": "https://data.mpsv.cz/od/soubory/volna-mista/volna-mista.schema.json",
+      "retrieved_at_utc_from_file_mtime": "2026-10-03T16:43:29.746032+00:00",
+      "compressed_or_file_bytes": 35064,
+      "uncompressed_bytes": 35064,
+      "sha256": "eb7e9e8e736a2b18de4d513c2114926a3817e595f09a7dceaa48df96ad231224",
+      "encoding": "UTF-8",
+      "compression": null
+    }
+  ]
+}

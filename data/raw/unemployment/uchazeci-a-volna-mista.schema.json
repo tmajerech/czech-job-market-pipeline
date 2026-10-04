@@ -1,0 +1,63 @@
+{
+  "id": "http://json-schema.org/draft-04/schema#",
+  "x-docUrl": "https://data.mpsv.cz/web/data/uchazeci-a-volna-mista",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "uchazeci-a-volna-mista",
+  "type": "object",
+  "properties": {
+    "polozky": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uzemniCelek": {
+            "type": "string"
+          },
+          "typUzemnihoCelku": {
+            "type": "string"
+          },
+          "miraNezamestnanosti": {
+            "type": [
+                "number",
+                "null"
+            ],
+            "description": "Čitatel: přesná evidence registrovaných - dosažitelných, neumístěných uchazečů o zaměstnání, občanů ČR a občanů EU, vedená úřady práce podle bydliště uchazeče ke konci sledovaného měsíce. Jmenovatel: počet zaměstnaných v národním hospodářství s jediným nebo hlavním zaměstnáním podle výsledků výběrových šetření pracovních sil - VŠPS (klouzavý průměr posledních 4 čtvrtletí) + počet pracujících cizinců ze třetích zemí s platným povolením k zaměstnávání, zaměstnaných občanů EU registrovaných ÚP (klouzavý průměr posledních 12-ti měsíců) a cizinců s platným živnostenským oprávněním (klouzavý průměr za poslední 2 pololetí) + přesná evidence registrovaných - dosažitelných, neumístěných uchazečů o zaměstnání, občanů ČR a občanů EU, vedená úřady práce podle bydliště uchazeče (klouzavý průměr posledních 12-ti měsíců)."
+          },
+          "podilNezOsob": {
+            "type": [
+                "number",
+                "null"
+            ],
+            "description": "PNO = UoZ15-64 let/P15–64 let * 100 - srovnává počty dosažitelných uchazečů k obyvatelstvu ve věku 15–64 let"
+          },
+          "obdobi": {
+            "type": "string"
+          },
+          "rok": {
+            "type": "string"
+          },
+          "mesic": {
+            "type": "string"
+          },
+          "uchazeci": {
+            "type": "number",
+            "description": "Uchazečem o zaměstnání může být (pokud zákon nestanoví jinak) pouze fyzická osoba s trvalým bydlištěm na území ČR, která osobně požádá o zprostředkování vhodného zaměstnání krajskou pobočku Úřadu práce ČR a které nebrání v zařazení do této evidence překážky uvedené v ustanovení § 25 zákona o zaměstnanosti, např. není v pracovním nebo obdobném vztahu nebo nevykonává samostatnou výdělečnou činnost."
+          },
+          "volnaMista": {
+            "type": "number",
+            "description": "VPM je nově vytvořené nebo uvolněné místo, na které zaměstnavatel zamýšlí získat zaměstnance nebo je hodlá obsadit dočasně přidělenými zaměstnanci agentury práce."
+          }
+        },
+        "required": [
+          "uzemniCelek",
+          "typUzemnihoCelku",
+          "obdobi",
+          "rok",
+          "mesic",
+          "uchazeci",
+          "volnaMista"
+        ]
+      }
+    }
+  }
+}

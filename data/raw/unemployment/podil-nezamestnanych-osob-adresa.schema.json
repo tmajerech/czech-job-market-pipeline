@@ -1,0 +1,83 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "JSON Schema podil_nezamestnanych_osob_trvala_kontaktni_adresa_metadata",
+    "type": "object",
+    "properties": {
+        "rozhodne_datum": {
+            "type": "date",
+            "description": "Poslední den období, ke kterému data businessově platí včetně tohoto dne"
+        },
+        "uchazec_pohlavi": {
+            "type": "string",
+            "description": "Pohlaví uchazeče"
+        },
+        "obec": {
+            "type": "string",
+            "description": "Obec"
+        },
+        "obec_kod": {
+            "type": "string",
+            "description": "Kód obce"
+        },
+        "obec_s_poverenym_uradem": {
+            "type": "string",
+            "description": "Obec s pověřeným obecním úřadem"
+        },
+        "obec_s_poverenym_uradem_kod": {
+            "type": "string",
+            "description": "Kód obce s pověřeným obecním úřadem"
+        },
+        "obec_s_rozsirenou_pusobnosti": {
+            "type": "string",
+            "description": "Obec s rozšířenou působností"
+        },
+        "obec_s_rozsirenou_pusobnosti_kod": {
+            "type": "string",
+            "description": "Kód obce s rozšířenou působností"
+        },
+        "okres": {
+            "type": "string",
+            "description": "Okres"
+        },
+        "okres_kod": {
+            "type": "string",
+            "description": "Kód okresu"
+        },
+        "kraj": {
+            "type": "string",
+            "description": "Kraj"
+        },
+        "kraj_kod": {
+            "type": "string",
+            "description": "Kód kraje"
+        },
+        "pocet_obyvatel_vek_15_64": {
+            "type": "integer",
+            "description": "Počet práce schopných obyvatel ve věkové skupině 15-64 let"
+        },
+        "pocet_uchazeci_dosazitelni_trvala": {
+            "type": "integer",
+            "description": "Počet uchazečů v evidenci k rozhodnému datu dle trvalé adresy, kteří nemají žádnou objektivní překážku pro přijetí do zaměstnání"
+        },
+        "pocet_uchazeci_v_evidenci_trvala": {
+            "type": "integer",
+            "description": "Počet uchazečů v evidenci k rozhodnému datu dle trvalé adresy"
+        },
+        "pocet_uchazeci_dosazitelni_kontaktni": {
+            "type": "integer",
+            "description": "Počet uchazečů v evidenci k rozhodnému datu dle kontaktní adresy, kteří nemají žádnou objektivní překážku pro přijetí do zaměstnání"
+        },
+        "pocet_uchazeci_v_evidenci_kontaktni": {
+            "type": "integer",
+            "description": "Počet uchazečů v evidenci k rozhodnému datu dle kontaktní adresy"
+        },
+        "pno": {
+            "type": "decimal",
+            "description": "Podíl nezaměstnaných osob"
+        },
+        "pno_kontaktni": {
+            "type": "decimal",
+            "description": "Podíl nezaměstnaných osob dle kontaktní adresy"
+        }
+    }
+}

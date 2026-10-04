@@ -1,0 +1,5 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/infra/.venv/bin/python",
+  "python.terminal.activateEnvironment": true,
+  "explorer.excludeGitIgnore": false
+}

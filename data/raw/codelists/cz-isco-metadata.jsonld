@@ -1,0 +1,333 @@
+{
+  "@context": {
+    "@language": "cs",
+    "adms": "http://www.w3.org/ns/adms#",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcatap": "http://data.europa.eu/r5r/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "location": "http://www.w3.org/ns/locn#",
+    "odrl": "http://www.w3.org/ns/odrl/2/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "pu": "https://data.gov.cz/slovník/podmínky-užití/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "spdx": "http://spdx.org/rdf/terms#",
+    "time": "http://www.w3.org/2006/time#",
+    "vcard": "http://www.w3.org/2006/vcard/ns#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "iri": "@id",
+    "typ": "@type",
+    "Katalog": "dcat:Catalog",
+    "poskytovatel": {
+      "@id": "dcterms:publisher",
+      "@type": "@id"
+    },
+    "datová_sada": {
+      "@id": "dcat:dataset",
+      "@type": "@id"
+    },
+    "domovská_stránka": {
+      "@id": "foaf:homepage",
+      "@type": "@id"
+    },
+    "Datová sada": "dcat:Dataset",
+    "název": {
+      "@id": "dcterms:title",
+      "@container": "@language"
+    },
+    "popis": {
+      "@id": "dcterms:description",
+      "@container": "@language"
+    },
+    "téma": {
+      "@id": "dcat:theme",
+      "@type": "@id"
+    },
+    "periodicita_aktualizace": {
+      "@id": "dcterms:accrualPeriodicity",
+      "@type": "@id"
+    },
+    "klíčové_slovo": {
+      "@id": "dcat:keyword",
+      "@container": "@language"
+    },
+    "geografické_území": {
+      "@id": "dcterms:spatial",
+      "@type": "@id"
+    },
+    "prvek_rúian": {
+      "@id": "dcterms:spatial",
+      "@type": "@id"
+    },
+    "prostorové_pokrytí": {
+      "@id": "dcterms:spatial",
+      "@type": "@id"
+    },
+    "časové_pokrytí": {
+      "@id": "dcterms:temporal",
+      "@type": "@id"
+    },
+    "Časový interval": "dcterms:PeriodOfTime",
+    "začátek": {
+      "@id": "dcat:startDate",
+      "@type": "xsd:date"
+    },
+    "konec": {
+      "@id": "dcat:endDate",
+      "@type": "xsd:date"
+    },
+    "je_součástí": {
+      "@id": "dcterms:isPartOf",
+      "@type": "@id"
+    },
+    "kontaktní_bod": {
+      "@id": "dcat:contactPoint",
+      "@type": "@id"
+    },
+    "Organizace": "vcard:Organization",
+    "jméno": {
+      "@id": "vcard:fn",
+      "@container": "@language"
+    },
+    "e-mail": {
+      "@id": "vcard:hasEmail",
+      "@type": "@id"
+    },
+    "dokumentace": {
+      "@id": "foaf:page",
+      "@type": "@id"
+    },
+    "specifikace": {
+      "@id": "dcterms:conformsTo",
+      "@type": "@id"
+    },
+    "koncept_euroVoc": {
+      "@id": "dcat:theme",
+      "@type": "@id"
+    },
+    "prostorové_rozlišení_v_metrech": {
+      "@id": "dcat:spatialResolutionInMeters",
+      "@type": "xsd:double"
+    },
+    "časové_rozlišení": {
+      "@id": "dcat:temporalResolution",
+      "@type": "xsd:duration"
+    },
+    "distribuce": {
+      "@id": "dcat:distribution",
+      "@type": "@id"
+    },
+    "Distribuce": "dcat:Distribution",
+    "podmínky_užití": {
+      "@id": "pu:specifikace",
+      "@type": "@id"
+    },
+    "Specifikace podmínek užití": "pu:Specifikace",
+    "autorské_dílo": {
+      "@id": "pu:autorské-dílo",
+      "@type": "@id"
+    },
+    "autor": {
+      "@id": "pu:autor",
+      "@container": "@language"
+    },
+    "databáze_jako_autorské_dílo": {
+      "@id": "pu:databáze-jako-autorské-dílo",
+      "@type": "@id"
+    },
+    "autor_databáze": {
+      "@id": "pu:autor-databáze",
+      "@container": "@language"
+    },
+    "databáze_chráněná_zvláštními_právy": {
+      "@id": "pu:databáze-chráněná-zvláštními-právy",
+      "@type": "@id"
+    },
+    "osobní_údaje": {
+      "@id": "pu:osobní-údaje",
+      "@type": "@id"
+    },
+    "přístupové_url": {
+      "@id": "dcat:accessURL",
+      "@type": "@id"
+    },
+    "soubor_ke_stažení": {
+      "@id": "dcat:downloadURL",
+      "@type": "@id"
+    },
+    "formát": {
+      "@id": "dcterms:format",
+      "@type": "@id"
+    },
+    "typ_média": {
+      "@id": "dcat:mediaType",
+      "@type": "@id"
+    },
+    "schéma": {
+      "@id": "dcterms:conformsTo",
+      "@type": "@id"
+    },
+    "typ_média_komprese": {
+      "@id": "dcat:compressFormat",
+      "@type": "@id"
+    },
+    "typ_média_balíčku": {
+      "@id": "dcat:packageFormat",
+      "@type": "@id"
+    },
+    "přístupová_služba": {
+      "@id": "dcat:accessService",
+      "@type": "@id"
+    },
+    "Datová služba": "dcat:DataService",
+    "přístupový_bod": {
+      "@id": "dcat:endpointURL",
+      "@type": "@id"
+    },
+    "popis_přístupového_bodu": {
+      "@id": "dcat:endpointDescription",
+      "@type": "@id"
+    },
+    "poskytuje_datovou_sadu": {
+      "@id": "dcat:servesDataset",
+      "@type": "@id"
+    }
+  },
+  "iri": "https://data.mpsv.cz/zdroj/CzIscoMetadata",
+  "typ": "Datová sada",
+  "název": {
+    "cs": "CZ-ISCO",
+    "en": "CZ-ISCO"
+  },
+  "popis": {
+    "cs": "Číselník zaměstnání CZ-ISCO podle klasifikace Českého statistického úřadu",
+    "en": "CZ-ISCO employment code according to the classification of the Czech Statistical Office"
+  },
+  "poskytovatel": "https://rpp-opendata.egon.gov.cz/odrpp/zdroj/orgán-veřejné-moci/00551023",
+  "téma": [
+    "http://publications.europa.eu/resource/authority/data-theme/EDUC"
+  ],
+  "periodicita_aktualizace": "http://publications.europa.eu/resource/authority/frequency/DAILY",
+  "klíčové_slovo": {
+    "cs": [
+      "číselník",
+      "zaměstnání"
+    ],
+    "en": [
+      "code list",
+      "jobs"
+    ]
+  },
+  "geografické_území": [
+    "http://publications.europa.eu/resource/authority/country/CZE"
+  ],
+  "prvek_rúian": [
+    "https://linked.cuzk.cz/resource/ruian/stat/1"
+  ],
+  "časové_pokrytí": {
+    "typ": "Časový interval",
+    "začátek": "2007-01-01",
+    "konec": ""
+  },
+  "kontaktní_bod": {
+    "typ": "Organizace",
+    "jméno": {
+      "cs": "Ministerstvo práce a sociálních věcí",
+      "en": "Ministry of Labour and Social Affairs"
+    },
+    "e-mail": "mailto:ales.kral@mpsv.cz"
+  },
+  "dokumentace": "https://data.mpsv.cz/web/data/-/ciselnik-cz-isco",
+  "specifikace": [
+    "https://ofn.gov.cz/číselníky/draft/"
+  ],
+  "koncept_euroVoc": [
+    "http://eurovoc.europa.eu/376"
+  ],
+  "distribuce": [
+    {
+      "typ": "Distribuce",
+      "podmínky_užití": {
+        "typ": "Specifikace podmínek užití",
+        "autorské_dílo": "https://data.gov.cz/podmínky-užití/neobsahuje-autorská-díla/",
+        "autor": {
+          "cs": "Ministerstvo práce a sociálních věcí"
+        },
+        "databáze_chráněná_zvláštními_právy": "https://data.gov.cz/podmínky-užití/není-chráněna-zvláštním-právem-pořizovatele-databáze/",
+        "databáze_jako_autorské_dílo": "https://data.gov.cz/podmínky-užití/neobsahuje-autorská-díla/",
+        "autor_databáze": {
+          "cs": "Ministerstvo práce a sociálních věcí"
+        },
+        "osobní_údaje": "https://data.gov.cz/podmínky-užití/neobsahuje-osobní-údaje/"
+      },
+      "iri": "https://data.mpsv.cz/zdroj/CzIscoMetadata/json",
+      "přístupové_url": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.json",
+      "soubor_ke_stažení": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.json",
+      "formát": "http://publications.europa.eu/resource/authority/file-type/JSON",
+      "typ_média": "http://www.iana.org/assignments/media-types/application/json",
+      "schéma": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.schema.json",
+      "typ_média_komprese": "",
+      "typ_média_balíčku": "",
+      "název": {
+        "en": "JSON distribution",
+        "cs": "JSON distribuce"
+      }
+    },
+    {
+      "typ": "Distribuce",
+      "podmínky_užití": {
+        "typ": "Specifikace podmínek užití",
+        "autorské_dílo": "https://data.gov.cz/podmínky-užití/neobsahuje-autorská-díla/",
+        "autor": {
+          "cs": "Ministerstvo práce a sociálních věcí"
+        },
+        "databáze_chráněná_zvláštními_právy": "https://data.gov.cz/podmínky-užití/není-chráněna-zvláštním-právem-pořizovatele-databáze/",
+        "databáze_jako_autorské_dílo": "https://data.gov.cz/podmínky-užití/neobsahuje-autorská-díla/",
+        "autor_databáze": {
+          "cs": "Ministerstvo práce a sociálních věcí"
+        },
+        "osobní_údaje": "https://data.gov.cz/podmínky-užití/neobsahuje-osobní-údaje/"
+      },
+      "iri": "https://data.mpsv.cz/zdroj/CzIscoMetadata/jsonld",
+      "přístupové_url": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.jsonld",
+      "soubor_ke_stažení": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.jsonld",
+      "formát": "http://publications.europa.eu/resource/authority/file-type/JSON_LD",
+      "typ_média": "http://www.iana.org/assignments/media-types/application/ld+json",
+      "schéma": "https://data.mpsv.cz/od/soubory/ciselniky/cz-isco.schema.json",
+      "typ_média_komprese": "",
+      "typ_média_balíčku": "",
+      "název": {
+        "en": "JSON-LD distribution",
+        "cs": "JSON-LD distribuce"
+      }
+    },
+    {
+      "typ": "Distribuce",
+      "podmínky_užití": {
+        "typ": "Specifikace podmínek užití",
+        "autorské_dílo": "https://data.gov.cz/podmínky-užití/neobsahuje-autorská-díla/",
+        "databáze_chráněná_zvláštními_právy": "https://data.gov.cz/podmínky-užití/není-chráněna-zvláštním-právem-pořizovatele-databáze/",
+        "databáze_jako_autorské_dílo": "https://data.gov.cz/podmínky-užití/není-autorskoprávně-chráněnou-databází/",
+        "osobní_údaje": "https://data.gov.cz/podmínky-užití/neobsahuje-osobní-údaje/"
+      },
+      "iri": "https://data.mpsv.cz/zdroj/CzIscoMetadata/sparql",
+      "přístupové_url": "https://data.mpsv.cz/sparql/",
+      "název": {
+        "en": "SPARQL endpoint",
+        "cs": "SPARQL endpoint"
+      },
+      "přístupová_služba": {
+        "iri": "https://data.mpsv.cz/zdroj/CzIscoMetadata/sparqlservice",
+        "typ": "Datová služba",
+        "název": {
+          "en": "SPARQL endpoint",
+          "cs": "SPARQL endpoint"
+        },
+        "přístupový_bod": "https://data.mpsv.cz/sparql/",
+        "popis_přístupového_bodu": "https://www.w3.org/TR/sparql11-protocol/"
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ciselnik-casti-obci",
+  "type": "object",
+  "description": "Číselník částí obce",
+  "x-docUrl": "https://data.mpsv.cz/web/data/-/ciselnik-casti-obci",
+  "properties": {
+    "polozky": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 129
+          },
+          "kod": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "nazev": {
+            "type": [
+              "object"
+            ],
+            "properties": {
+              "cs": {
+                "type": [
+                  "string"
+                ]
+              }
+            },
+            "required": [
+              "cs"
+            ]
+          },
+          "obec": {
+            "x-looseRef": "/od/soubory/ciselniky/obce.schema.json",
+            "type": "string",
+            "maxLength": 129
+          }
+        },
+        "required": [
+          "id",
+          "kod",
+          "nazev",
+          "obec"
+        ]
+      }
+    }
+  }
+}
