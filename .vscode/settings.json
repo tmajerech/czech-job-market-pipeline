@@ -1,5 +1,9 @@
 {
   "python.defaultInterpreterPath": "${workspaceFolder}/infra/.venv/bin/python",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/infra"
+  ],
+  "python.analysis.importFormat": "relative",
   "python.terminal.activateEnvironment": true,
   "explorer.excludeGitIgnore": false
 }

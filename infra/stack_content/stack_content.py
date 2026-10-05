@@ -1,6 +1,9 @@
 from aws_cdk import Stack
 from constructs import Construct
 
+from .lambdas_construct import LambdasConstruct
+from .storage_construct import StorageConstruct
+
 
 class StackContent(Stack):
     def __init__(
@@ -11,4 +14,5 @@ class StackContent(Stack):
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # Compose the platform constructs here as they are added.
+        self.storage = StorageConstruct(self, "StorageConstruct")
+        self.lambdas = LambdasConstruct(self, "LambdasConstruct", self.storage)
