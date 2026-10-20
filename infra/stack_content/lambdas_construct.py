@@ -30,6 +30,21 @@ class LambdasConstruct(Construct):
             handler="lambda_handler",
             runtime=lambda_.Runtime.PYTHON_3_14,
             timeout=Duration.minutes(5),
+            memory_size=128,
+            environment={"DATA_BUCKET_NAME": storage.data_bucket.bucket_name},
+            bundling=BundlingOptions(
+                asset_excludes=["__pycache__", "*.pyc"],
+            ),
+        )
+
+        self.transform_snapshot = PythonFunction(
+            self,
+            "TransformSnapshot",
+            entry=str(INFRA_ROOT / "handlers" / "transform_snapshot"),
+            index="index.py",
+            handler="lambda_handler",
+            runtime=lambda_.Runtime.PYTHON_3_14,
+            timeout=Duration.minutes(5),
             memory_size=512,
             environment={"DATA_BUCKET_NAME": storage.data_bucket.bucket_name},
             bundling=BundlingOptions(
@@ -37,13 +52,5 @@ class LambdasConstruct(Construct):
             ),
         )
 
-        self.download_snapshot.add_to_role_policy(
-            iam.PolicyStatement(
-                actions=[
-                    "s3:AbortMultipartUpload",
-                    "s3:GetObject",
-                    "s3:PutObject",
-                ],
-                resources=[storage.data_bucket.arn_for_objects("*")],
-            )
-        )
+        storage.data_bucket.grant_read_write(self.transform_snapshot)
+        storage.data_bucket.grant_read_write(self.download_snapshot)

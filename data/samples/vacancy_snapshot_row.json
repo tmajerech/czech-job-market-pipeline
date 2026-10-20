@@ -1,0 +1,137 @@
+{
+  "portalId": 67273069,
+  "id": "VolneMisto/67273069",
+  "referencniCislo": "33393600726",
+  "azylant": false,
+  "cizinecMimoEu": true,
+  "datumVlozeni": "2026-07-01T00:00:00.000Z",
+  "datumZmeny": "2026-10-01T08:39:41.693Z",
+  "mesicniMzdaDo": null,
+  "mesicniMzdaOd": 24000,
+  "modraKarta": false,
+  "pocetHodinTydne": null,
+  "pocetMist": 10,
+  "pozadovanaProfese": {
+    "cs": "Doplňovač zboží"
+  },
+  "statniSpravaSamosprava": false,
+  "terminUkonceniPracovnihoPomeru": null,
+  "terminZahajeniPracovnihoPomeru": "2026-07-01",
+  "souhlasAgenturyAgentura": false,
+  "souhlasAgenturyUzivatel": false,
+  "upresnujiciInformace": null,
+  "urlAdresa": null,
+  "zamestnaneckaKarta": true,
+  "expirace": null,
+  "minPozadovaneVzdelani": {
+    "id": "VzdelaniDetailniKategorie/zaklPraktSkol"
+  },
+  "smennost": {
+    "id": "Smennost/jednoSm"
+  },
+  "typMzdy": {
+    "id": "TypMzdy/mesic"
+  },
+  "zverejnovat": {
+    "id": "ZverejnovatVpm/ano"
+  },
+  "mistoVykonuPrace": {
+    "typMistaVykonuPrace": {
+      "id": "TypMistaVykonuPrace/adrprov"
+    },
+    "obec": null,
+    "okresy": null,
+    "adresaText": null,
+    "pracoviste": [
+      {
+        "email": null,
+        "nazev": "KTM plus s.r.o.",
+        "telefon": null,
+        "adresa": {
+          "cisloDomovni": 67,
+          "cisloOrientacni": null,
+          "dodatekAdresy": null,
+          "kodAdresnihoMista": 8751994,
+          "psc": null,
+          "typCislaDomovniho": {
+            "id": "TypStavebnihoObjektu/1"
+          },
+          "kraj": {
+            "id": "Kraj/35"
+          },
+          "okres": {
+            "id": "Okres/3302"
+          },
+          "obec": {
+            "id": "Obec/545848"
+          },
+          "mestskyObvodMestskaCast": null,
+          "mestskyObvodVPraze": null,
+          "castObce": {
+            "id": "CastObce/188972"
+          },
+          "ulice": null
+        }
+      }
+    ]
+  },
+  "zamestnavatel": {
+    "ico": "02903814",
+    "nazev": "KTM Plus s.r.o."
+  },
+  "profeseCzIsco": {
+    "id": "CzIsco/52231"
+  },
+  "pracovnePravniVztahy": [
+    {
+      "id": "PracovnepravniVztah/plny"
+    }
+  ],
+  "vhodnostiPracovnihoMista": [
+    {
+      "id": "VhodnostProTypZamestnance/zdravi"
+    }
+  ],
+  "kontaktniPracoviste": {
+    "id": "KontaktniPracoviste/CKA"
+  },
+  "vyhodyVolnehoMista": null,
+  "pozadovanaDovednost": null,
+  "pozadovanaJazykovaZnalost": null,
+  "pozadovanePovolani": null,
+  "pozadovaneVzdelani": null,
+  "prvniKontaktSeZamestnavatelem": {
+    "komuSeHlasit": null,
+    "kdeSeHlasit": {
+      "email": null,
+      "telefon": null,
+      "mistoKontaktu": "KTM plus s.r.o.",
+      "adresa": {
+        "cisloDomovni": 67,
+        "cisloOrientacni": null,
+        "dodatekAdresy": null,
+        "kodAdresnihoMista": 8751994,
+        "psc": null,
+        "typCislaDomovniho": {
+          "id": "TypStavebnihoObjektu/1"
+        },
+        "kraj": {
+          "id": "Kraj/35"
+        },
+        "okres": {
+          "id": "Okres/3302"
+        },
+        "obec": {
+          "id": "Obec/545848"
+        },
+        "mestskyObvodMestskaCast": null,
+        "mestskyObvodVPraze": null,
+        "castObce": {
+          "id": "CastObce/188972"
+        },
+        "nazevCastiObce": null,
+        "ulice": null
+      }
+    }
+  }
+}

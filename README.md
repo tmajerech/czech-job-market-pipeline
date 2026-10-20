@@ -1,6 +1,12 @@
-# Czech Job Market Data Platform — discovery phase
+# Czech Job Market Data Platform
 
-This workspace contains the data-discovery and profiling phase for a possible Czech labour-market data platform. It deliberately stops before AWS infrastructure, Snowflake models, dbt, APIs, or production pipelines.
+This workspace started with data discovery and profiling for a Czech
+labour-market data platform and now includes the first AWS snapshot-ingestion
+workflow. Snowflake models, dbt, APIs, and the presentation layer have not been
+built yet.
+
+Current implementation status, architectural decisions, and the next step are
+tracked in [`docs/project-log.md`](docs/project-log.md).
 
 The probe used official MPSV / Úřad práce sources retrieved on 3 October 2026. Start with:
 

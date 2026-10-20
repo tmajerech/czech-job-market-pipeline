@@ -18,7 +18,14 @@ class IngestionConstruct(Construct):
         download_snapshot = tasks.LambdaInvoke(
             self,
             "DownloadSnapshot",
-            lambda_function=lambdas.download_snapshot,
+            lambda_function=lambdas.download_snapshot,  # type: ignore
+            payload_response_only=True,
+        )
+
+        transform_snapshot = tasks.LambdaInvoke(
+            self,
+            "TransformSnapshot",
+            lambda_function=lambdas.transform_snapshot,  # type: ignore
             payload_response_only=True,
         )
 
@@ -26,6 +33,6 @@ class IngestionConstruct(Construct):
             self,
             "DownloadStateMachine",
             definition_body=stepfunctions.DefinitionBody.from_chainable(
-                download_snapshot
+                download_snapshot.next(transform_snapshot)
             ),
         )

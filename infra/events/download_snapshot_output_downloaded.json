@@ -1,0 +1,7 @@
+{
+  "status": "downloaded",
+  "bucket": "meddea-jobs-data",
+  "key": "raw/mpsv/volna-mista/snapshot_date=2026-10-06/volna-mista.json.gz",
+  "size_bytes": 17368295,
+  "source_url": "https://data.mpsv.cz/od/soubory/volna-mista/volna-mista.json.gz"
+}
