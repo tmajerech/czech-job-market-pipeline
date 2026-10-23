@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-19
+Last updated: 2026-10-21
 
 ## Current state
 
@@ -23,6 +23,8 @@ Last updated: 2026-10-19
 - The transform directory contains raw-key enums, a sample vacancy row,
   download-output event samples, `pyarrow`, an initial Silver schema, and a
   first `transform_vacancy` mapper.
+- The local playground has a dependency-free Bronze downloader that streams the
+  daily MPSV vacancy snapshot to a date-partitioned path using an atomic rename.
 
 ## Accepted decisions
 
@@ -99,3 +101,11 @@ Resolve the initial Silver table boundary, starting with whether the current
 employer fields move from `VACANCY_SCHEMA` into a separate
 `VACANCY_EMPLOYER_SCHEMA`. Then finish one locally testable transformation of
 the retained raw sample before deploying anything.
+
+## Changes
+
+### 2026-10-21: Add the local Bronze downloader
+
+`local/download_bronze.py` now downloads the unchanged vacancy snapshot into a
+daily Bronze partition. It reuses a non-empty local snapshot and writes through
+a temporary file so interrupted transfers are not exposed as complete input.

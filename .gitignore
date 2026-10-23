@@ -14,3 +14,6 @@ analysis/
 .venv/
 __pycache__/
 *.pyc
+
+# Local S3 doppelganger directories.
+s3_doppelganger/
