@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 ## Current state
 
@@ -27,8 +27,10 @@ Last updated: 2026-10-25
   daily MPSV vacancy snapshot to a date-partitioned path using an atomic rename.
 - The local Silver prototype loads one Bronze snapshot into DuckDB once and
   builds explicit temporary tables for vacancies, workplaces, benefits,
-  required skills, required languages, and contacts. It does not export
-  Parquet yet.
+  required skills, required languages, and contacts. Each table has one
+  class/file with its creation SQL, declared grain, shared grain validation,
+  and atomic Parquet export through `BaseTable`. The first complete local
+  snapshot exports five publishable tables; contacts are validated but omitted.
 
 ## Accepted decisions
 
@@ -80,11 +82,15 @@ own table or the parent vacancy row.
 `vacancy_contacts` contains personal contact data and must not be included in a
 public Silver export without an explicit privacy decision.
 
+### Keep contact PII out of the published Silver V1
+
+`VacancyContactsTable` participates in creation and validation but has
+`publish = False`. The local Silver export therefore contains no contact-person
+names, email addresses, or phone numbers.
+
 ## Open design decisions
 
-- Decide which temporary Silver models are published to Parquet.
-- Decide whether `vacancy_contacts` stays local/restricted or is omitted
-  entirely from published Silver because it contains PII.
+- Define explicit output type contracts for the local DuckDB Silver tables.
 - Keep employer data vacancy-scoped for now. A deduplicated employer dimension
   remains a later Gold decision because IČO can be absent and names are not
   stable keys.
@@ -106,9 +112,8 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Validate the keys and schemas of the local temporary Silver tables, decide
-which of them are publishable, and export the selected tables as partitioned
-Parquet. Do not deploy the incomplete Lambda transform yet.
+Define and validate explicit column types for the five published Silver tables
+before building Gold models. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -124,3 +129,20 @@ a temporary file so interrupted transfers are not exposed as complete input.
 its top-level columns, and creates explicit temporary models for the initial
 Silver table set. Nested 1:N arrays use relationship tables, while 1:1 objects
 are flattened. Contact data remains isolated because it contains PII.
+
+### 2026-10-25: Split Silver models into table classes
+
+Each V1 Silver table now lives in its own module and implements the shared
+class-based create/validate lifecycle. Grain validation checks required key
+values and duplicate semantic rows before a table can be published. The
+workplace grain uses `(snapshot_date, portal_id, workplace_name)` because the
+measured source has 7,692 missing address-place codes but no missing or
+duplicate workplace names within a vacancy snapshot.
+
+### 2026-10-26: Export the validated local Silver snapshot
+
+`BaseTable` now writes publishable tables through a temporary file, re-reads
+the Parquet to verify its row count, and atomically replaces the final output.
+The first complete run produced vacancies, workplaces, benefits, required
+skills, and required languages for snapshot `2026-10-21`; contacts remained
+local because `publish = False`.
