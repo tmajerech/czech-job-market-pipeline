@@ -1,5 +1,5 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}/infra/.venv/bin/python",
+  "python.defaultInterpreterPath": "${workspaceFolder}/local/.venv/bin/python",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/infra"
   ],

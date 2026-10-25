@@ -14,6 +14,11 @@ analysis/
 .venv/
 __pycache__/
 *.pyc
+.DS_Store
 
 # Local S3 doppelganger directories.
 s3_doppelganger/
+
+# Local DuckDB databases and write-ahead logs.
+*.duckdb
+*.duckdb.wal

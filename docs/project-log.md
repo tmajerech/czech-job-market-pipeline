@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-21
+Last updated: 2026-10-25
 
 ## Current state
 
@@ -25,6 +25,10 @@ Last updated: 2026-10-21
   first `transform_vacancy` mapper.
 - The local playground has a dependency-free Bronze downloader that streams the
   daily MPSV vacancy snapshot to a date-partitioned path using an atomic rename.
+- The local Silver prototype loads one Bronze snapshot into DuckDB once and
+  builds explicit temporary tables for vacancies, workplaces, benefits,
+  required skills, required languages, and contacts. It does not export
+  Parquet yet.
 
 ## Accepted decisions
 
@@ -65,20 +69,25 @@ validation succeeds.
 Silver Parquet files use explicit schemas so column types stay stable across
 daily snapshots, including days where a nullable column contains only nulls.
 
-## Open design decision
+### Prototype Silver locally with DuckDB
 
-Decide the initial Silver table boundary before extending the mapper. The
-current proposal is:
+The local V1 uses a thin Python runner with explicit DuckDB SQL. It loads the
+source snapshot once into `staged_vacancies`, checks required and unexpected
+top-level columns, and builds table-specific temporary models. Repeated source
+arrays become relationship tables; 1:1 structures are flattened into their
+own table or the parent vacancy row.
 
-- `vacancies`: scalar vacancy fields;
-- `vacancy_employers`: `(snapshot_date, portal_id, employer_ico,
-  employer_name)`, preserving missing IČO and privacy-mode records;
-- later child tables for workplaces and repeated relationships, suitability,
-  benefits, skills, languages, occupations, and education.
+`vacancy_contacts` contains personal contact data and must not be included in a
+public Silver export without an explicit privacy decision.
 
-Do not treat a deduplicated `employers` dimension as decided yet. That is more
-appropriate for a later analytical/Gold model because IČO can be absent and
-employer names are not stable keys.
+## Open design decisions
+
+- Decide which temporary Silver models are published to Parquet.
+- Decide whether `vacancy_contacts` stays local/restricted or is omitted
+  entirely from published Silver because it contains PII.
+- Keep employer data vacancy-scoped for now. A deduplicated employer dimension
+  remains a later Gold decision because IČO can be absent and names are not
+  stable keys.
 
 ## Known transform issues
 
@@ -97,10 +106,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Resolve the initial Silver table boundary, starting with whether the current
-employer fields move from `VACANCY_SCHEMA` into a separate
-`VACANCY_EMPLOYER_SCHEMA`. Then finish one locally testable transformation of
-the retained raw sample before deploying anything.
+Validate the keys and schemas of the local temporary Silver tables, decide
+which of them are publishable, and export the selected tables as partitioned
+Parquet. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -109,3 +117,10 @@ the retained raw sample before deploying anything.
 `local/download_bronze.py` now downloads the unchanged vacancy snapshot into a
 daily Bronze partition. It reuses a non-empty local snapshot and writes through
 a temporary file so interrupted transfers are not exposed as complete input.
+
+### 2026-10-25: Add the local DuckDB Silver V1 models
+
+`local/build_silver.py` now loads the latest local Bronze snapshot, validates
+its top-level columns, and creates explicit temporary models for the initial
+Silver table set. Nested 1:N arrays use relationship tables, while 1:1 objects
+are flattened. Contact data remains isolated because it contains PII.
