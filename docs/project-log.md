@@ -31,6 +31,8 @@ Last updated: 2026-10-26
   class/file with its creation SQL, declared grain, shared grain validation,
   and atomic Parquet export through `BaseTable`. The first complete local
   snapshot exports five publishable tables; contacts are validated but omitted.
+  All six tables have explicit output type contracts validated against the
+  complete local snapshot.
 
 ## Accepted decisions
 
@@ -88,9 +90,14 @@ public Silver export without an explicit privacy decision.
 `publish = False`. The local Silver export therefore contains no contact-person
 names, email addresses, or phone numbers.
 
+### Use explicit output types in local Silver
+
+Every selected Silver column is cast to its intended output type in the table's
+creation SQL. This keeps the Parquet schema stable when nullable source fields
+change their observed values between snapshots.
+
 ## Open design decisions
 
-- Define explicit output type contracts for the local DuckDB Silver tables.
 - Keep employer data vacancy-scoped for now. A deduplicated employer dimension
   remains a later Gold decision because IČO can be absent and names are not
   stable keys.
@@ -112,8 +119,8 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Define and validate explicit column types for the five published Silver tables
-before building Gold models. Do not deploy the incomplete Lambda transform yet.
+Define the grain and required metrics for the first Gold vacancy model. Do not
+deploy the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -146,3 +153,12 @@ the Parquet to verify its row count, and atomically replaces the final output.
 The first complete run produced vacancies, workplaces, benefits, required
 skills, and required languages for snapshot `2026-10-21`; contacts remained
 local because `publish = False`.
+
+### 2026-10-26: Define the Silver output types
+
+Every selected column across vacancies, workplaces, benefits, required skills,
+required languages, and contacts is now explicitly cast before validation and
+export. Source timestamps retain their time component, monetary and hour values
+use fixed-precision decimals, source identifiers remain strings, and repeated
+identifiers use typed string lists. The full snapshot build passed with 39,640
+vacancy rows.

@@ -12,38 +12,38 @@ class VacancyWorkplacesTable(BaseTable):
         return f"""
 CREATE OR REPLACE TEMP TABLE {cls.name} AS
 SELECT
-    vacancy.snapshot_date,
-    vacancy.portalId AS portal_id,
+    CAST(vacancy.snapshot_date AS DATE) AS snapshot_date,
+    CAST(vacancy.portalId AS BIGINT) AS portal_id,
 
-    workplace.nazev AS workplace_name,
+    CAST(workplace.nazev AS VARCHAR) AS workplace_name,
 
-    workplace.adresa.kodAdresnihoMista
+    CAST(workplace.adresa.kodAdresnihoMista AS BIGINT)
         AS address_place_code,
-    workplace.adresa.psc
+    CAST(workplace.adresa.psc AS VARCHAR)
         AS postal_code,
-    workplace.adresa.kraj.id
+    CAST(workplace.adresa.kraj.id AS VARCHAR)
         AS region_id,
-    workplace.adresa.okres.id
+    CAST(workplace.adresa.okres.id AS VARCHAR)
         AS district_id,
-    workplace.adresa.obec.id
+    CAST(workplace.adresa.obec.id AS VARCHAR)
         AS municipality_id,
-    workplace.adresa.mestskyObvodMestskaCast.id
+    CAST(workplace.adresa.mestskyObvodMestskaCast.id AS VARCHAR)
         AS municipal_district_id,
-    workplace.adresa.mestskyObvodVPraze.id
+    CAST(workplace.adresa.mestskyObvodVPraze.id AS VARCHAR)
         AS prague_district_id,
-    workplace.adresa.castObce.id
+    CAST(workplace.adresa.castObce.id AS VARCHAR)
         AS municipality_part_id,
-    workplace.adresa.ulice.nazev
+    CAST(workplace.adresa.ulice.nazev AS VARCHAR)
         AS street_name,
-    workplace.adresa.cisloDomovni
+    CAST(workplace.adresa.cisloDomovni AS BIGINT)
         AS house_number,
-    workplace.adresa.cisloOrientacni
+    CAST(workplace.adresa.cisloOrientacni AS VARCHAR)
         AS orientation_number,
-    workplace.adresa.typCislaDomovniho.id
+    CAST(workplace.adresa.typCislaDomovniho.id AS VARCHAR)
         AS house_number_type_id,
-    workplace.adresa.dodatekAdresy
+    CAST(workplace.adresa.dodatekAdresy AS VARCHAR)
         AS address_suffix,
-    workplace.adresa.nazevCastiObce
+    CAST(workplace.adresa.nazevCastiObce AS VARCHAR)
         AS municipality_part_name
 FROM staged_vacancies AS vacancy
 CROSS JOIN LATERAL UNNEST(

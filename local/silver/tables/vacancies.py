@@ -13,66 +13,81 @@ class VacanciesTable(BaseTable):
         return f"""
 CREATE OR REPLACE TEMP TABLE {cls.name} AS
 SELECT
-    snapshot_date,
-    portalId AS portal_id,
-    id,
-    referencniCislo AS reference_number,
+    CAST(snapshot_date AS DATE) AS snapshot_date,
+    CAST(portalId AS BIGINT) AS portal_id,
+    CAST(id AS VARCHAR) AS id,
+    CAST(referencniCislo AS VARCHAR) AS reference_number,
 
-    azylant,
-    cizinecMimoEu AS non_eu_foreign_national,
-    modraKarta AS blue_card,
-    zamestnaneckaKarta AS employee_card,
+    CAST(azylant AS BOOLEAN) AS asylum_seeker,
+    CAST(cizinecMimoEu AS BOOLEAN) AS non_eu_foreign_national,
+    CAST(modraKarta AS BOOLEAN) AS blue_card,
+    CAST(zamestnaneckaKarta AS BOOLEAN) AS employee_card,
 
-    datumVlozeni AS created_at,
-    datumZmeny AS updated_at,
-    expirace AS expiration_date,
-    terminUkonceniPracovnihoPomeru AS employment_end_date,
-    terminZahajeniPracovnihoPomeru AS employment_start_date,
+    CAST(datumVlozeni AS TIMESTAMP) AS created_at,
+    CAST(datumZmeny AS TIMESTAMP) AS updated_at,
+    CAST(expirace AS DATE) AS expiration_date,
+    CAST(terminUkonceniPracovnihoPomeru AS DATE)
+        AS employment_end_date,
+    CAST(terminZahajeniPracovnihoPomeru AS DATE)
+        AS employment_start_date,
 
-    mesicniMzdaDo AS monthly_salary_to,
-    mesicniMzdaOd AS monthly_salary_from,
-    pocetHodinTydne AS weekly_hours,
-    pocetMist AS number_of_positions,
+    CAST(mesicniMzdaDo AS DECIMAL(18,2)) AS monthly_salary_to,
+    CAST(mesicniMzdaOd AS DECIMAL(18,2)) AS monthly_salary_from,
+    CAST(pocetHodinTydne AS DECIMAL(5,2)) AS weekly_hours,
+    CAST(pocetMist AS BIGINT) AS number_of_positions,
 
-    {extract_cs_text_sql("pozadovanaProfese")} AS required_profession,
-    {extract_cs_text_sql("upresnujiciInformace")} AS additional_information,
-    urlAdresa AS url_address,
+    CAST({extract_cs_text_sql("pozadovanaProfese")} AS VARCHAR)
+        AS required_profession,
+    CAST({extract_cs_text_sql("upresnujiciInformace")} AS VARCHAR)
+        AS additional_information,
+    CAST(urlAdresa AS VARCHAR) AS url_address,
 
-    statniSpravaSamosprava AS public_administration,
-    souhlasAgenturyAgentura AS agency_agency_consent,
-    souhlasAgenturyUzivatel AS agency_user_consent,
+    CAST(statniSpravaSamosprava AS BOOLEAN) AS public_administration,
+    CAST(souhlasAgenturyAgentura AS BOOLEAN) AS agency_agency_consent,
+    CAST(souhlasAgenturyUzivatel AS BOOLEAN) AS agency_user_consent,
 
-    minPozadovaneVzdelani.id AS minimum_required_education_id,
-    smennost.id AS shift_pattern_id,
-    typMzdy.id AS salary_type_id,
-    zverejnovat.id AS publish_type_id,
+    CAST(minPozadovaneVzdelani.id AS VARCHAR) AS minimum_required_education_id,
+    CAST(smennost.id AS VARCHAR) AS shift_pattern_id,
+    CAST(typMzdy.id AS VARCHAR) AS salary_type_id,
+    CAST(zverejnovat.id AS VARCHAR) AS publish_type_id,
 
-    mistoVykonuPrace.typMistaVykonuPrace.id AS work_location_type_id,
-    mistoVykonuPrace.obec.id AS work_location_municipality_id,
-    LIST_TRANSFORM(
-        mistoVykonuPrace.okresy,
-        district -> district.id
+    CAST(mistoVykonuPrace.typMistaVykonuPrace.id AS VARCHAR)
+        AS work_location_type_id,
+    CAST(mistoVykonuPrace.obec.id AS VARCHAR)
+        AS work_location_municipality_id,
+    CAST(
+        LIST_TRANSFORM(
+            mistoVykonuPrace.okresy,
+            district -> district.id
+        ) AS VARCHAR[]
     ) AS work_location_district_ids,
-    mistoVykonuPrace.adresaText AS work_location_address_text,
+    CAST(mistoVykonuPrace.adresaText AS VARCHAR)
+        AS work_location_address_text,
 
-    zamestnavatel.ico AS employer_ico,
-    zamestnavatel.nazev AS employer_name,
+    CAST(zamestnavatel.ico AS VARCHAR) AS employer_ico,
+    CAST(zamestnavatel.nazev AS VARCHAR) AS employer_name,
 
-    profeseCzIsco.id AS profession_cz_isco_id,
-    LIST_TRANSFORM(
-        pracovnePravniVztahy,
-        relation -> relation.id
+    CAST(profeseCzIsco.id AS VARCHAR) AS profession_cz_isco_id,
+    CAST(
+        LIST_TRANSFORM(
+            pracovnePravniVztahy,
+            relation -> relation.id
+        ) AS VARCHAR[]
     ) AS employment_relation_type_ids,
-    LIST_TRANSFORM(
-        vhodnostiPracovnihoMista,
-        suitability -> suitability.id
+    CAST(
+        LIST_TRANSFORM(
+            vhodnostiPracovnihoMista,
+            suitability -> suitability.id
+        ) AS VARCHAR[]
     ) AS work_place_suitability_type_ids,
-    LIST_TRANSFORM(
-        pozadovaneVzdelani,
-        education -> education.id
+    CAST(
+        LIST_TRANSFORM(
+            pozadovaneVzdelani,
+            education -> education.id
+        ) AS VARCHAR[]
     ) AS required_education_ids,
 
-    kontaktniPracoviste.id AS contact_office_id
+    CAST(kontaktniPracoviste.id AS VARCHAR) AS contact_office_id
 FROM staged_vacancies;
 """
 

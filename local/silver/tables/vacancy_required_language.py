@@ -12,12 +12,12 @@ class VacancyRequiredLanguageTable(BaseTable):
         return f"""
 CREATE OR REPLACE TEMP TABLE {cls.name} AS
 SELECT
-    vacancy.snapshot_date,
-    vacancy.portalId AS portal_id,
+    CAST(vacancy.snapshot_date AS DATE) AS snapshot_date,
+    CAST(vacancy.portalId AS BIGINT) AS portal_id,
 
-    language.urovenZnalosti.id AS skill_level_id,
-    language.jazyk.id AS language_id,
-    language.popis AS description
+    CAST(language.urovenZnalosti.id AS VARCHAR) AS skill_level_id,
+    CAST(language.jazyk.id AS VARCHAR) AS language_id,
+    CAST(language.popis AS VARCHAR) AS description
 FROM staged_vacancies AS vacancy
 CROSS JOIN LATERAL UNNEST(
     vacancy.pozadovanaJazykovaZnalost

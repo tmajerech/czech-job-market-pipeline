@@ -12,11 +12,11 @@ class VacancyBenefitsTable(BaseTable):
         return f"""
 CREATE OR REPLACE TEMP TABLE {cls.name} AS
 SELECT
-    vacancy.snapshot_date,
-    vacancy.portalId AS portal_id,
+    CAST(vacancy.snapshot_date AS DATE) AS snapshot_date,
+    CAST(vacancy.portalId AS BIGINT) AS portal_id,
 
-    benefit.vyhoda.id AS benefit_id,
-    benefit.popis AS benefit_description
+    CAST(benefit.vyhoda.id AS VARCHAR) AS benefit_id,
+    CAST(benefit.popis AS VARCHAR) AS benefit_description
 FROM staged_vacancies AS vacancy
 CROSS JOIN LATERAL UNNEST(
     vacancy.vyhodyVolnehoMista

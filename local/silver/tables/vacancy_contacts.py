@@ -15,58 +15,58 @@ class VacancyContactsTable(BaseTable):
         return f"""
 CREATE OR REPLACE TEMP TABLE {cls.name} AS
 SELECT
-    vacancy.snapshot_date,
-    vacancy.portalId AS portal_id,
+    CAST(vacancy.snapshot_date AS DATE) AS snapshot_date,
+    CAST(vacancy.portalId AS BIGINT) AS portal_id,
 
-    vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.jmeno
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.jmeno AS VARCHAR)
         AS contact_person_first_name,
-    vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.prijmeni
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.prijmeni AS VARCHAR)
         AS contact_person_last_name,
-    vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.titulPredJmenem
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.titulPredJmenem AS VARCHAR)
         AS contact_person_title_before_name,
-    vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.titulZaJmenem
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.titulZaJmenem AS VARCHAR)
         AS contact_person_title_after_name,
-    vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.poziceVeSpolecnosti
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.poziceVeSpolecnosti AS VARCHAR)
         AS contact_person_company_position,
-    vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.email
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.email AS VARCHAR)
         AS contact_person_email,
-    vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.telefon
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.komuSeHlasit.telefon AS VARCHAR)
         AS contact_person_phone,
 
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.email
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.email AS VARCHAR)
         AS contact_location_email,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.telefon
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.telefon AS VARCHAR)
         AS contact_location_phone,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.mistoKontaktu
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.mistoKontaktu AS VARCHAR)
         AS contact_place,
 
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.kodAdresnihoMista
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.kodAdresnihoMista AS BIGINT)
         AS address_place_code,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.psc
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.psc AS VARCHAR)
         AS postal_code,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.kraj.id
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.kraj.id AS VARCHAR)
         AS region_id,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.okres.id
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.okres.id AS VARCHAR)
         AS district_id,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.obec.id
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.obec.id AS VARCHAR)
         AS municipality_id,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.mestskyObvodMestskaCast.id
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.mestskyObvodMestskaCast.id AS VARCHAR)
         AS municipal_district_id,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.mestskyObvodVPraze.id
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.mestskyObvodVPraze.id AS VARCHAR)
         AS prague_district_id,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.castObce.id
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.castObce.id AS VARCHAR)
         AS municipality_part_id,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.ulice.nazev
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.ulice.nazev AS VARCHAR)
         AS street_name,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.cisloDomovni
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.cisloDomovni AS BIGINT)
         AS house_number,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.cisloOrientacni
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.cisloOrientacni AS VARCHAR)
         AS orientation_number,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.typCislaDomovniho.id
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.typCislaDomovniho.id AS VARCHAR)
         AS house_number_type_id,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.dodatekAdresy
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.dodatekAdresy AS VARCHAR)
         AS address_suffix,
-    vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.nazevCastiObce
+    CAST(vacancy.prvniKontaktSeZamestnavatelem.kdeSeHlasit.adresa.nazevCastiObce AS VARCHAR)
         AS municipality_part_name
 FROM staged_vacancies AS vacancy;
 """
