@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 
 ## Current state
 
@@ -23,8 +23,10 @@ Last updated: 2026-10-26
 - The transform directory contains raw-key enums, a sample vacancy row,
   download-output event samples, `pyarrow`, an initial Silver schema, and a
   first `transform_vacancy` mapper.
-- The local playground has a dependency-free Bronze downloader that streams the
-  daily MPSV vacancy snapshot to a date-partitioned path using an atomic rename.
+- The local playground has one dependency-free Bronze entrypoint that downloads
+  the daily MPSV vacancy snapshot and all 22 referenced codelists into the same
+  date partition. Every file is streamed through an atomic rename and a repeat
+  run reuses existing non-empty files.
 - The local Silver prototype loads one Bronze snapshot into DuckDB once and
   builds explicit temporary tables for vacancies, workplaces, benefits,
   required skills, required languages, and contacts. Each table has one
@@ -96,6 +98,15 @@ Every selected Silver column is cast to its intended output type in the table's
 creation SQL. This keeps the Parquet schema stable when nullable source fields
 change their observed values between snapshots.
 
+### Use one entrypoint per local data layer
+
+The local pipeline exposes `build_bronze.py`, `build_silver.py`, and eventually
+`build_gold.py` as the runnable layer entrypoints. Source-specific downloaders
+and table-specific transforms remain separate modules called by those scripts.
+One Bronze run calculates the snapshot date once and passes it to every source.
+The MPSV endpoints expose only their current state, so the Bronze entrypoint
+does not accept a historical snapshot date or claim to support backfills.
+
 ## Open design decisions
 
 - Keep employer data vacancy-scoped for now. A deduplicated employer dimension
@@ -119,16 +130,17 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Define the grain and required metrics for the first Gold vacancy model. Do not
-deploy the incomplete Lambda transform yet.
+Transform the Bronze codelists into typed Silver reference tables, starting with
+professions, districts, regions, and salary types. Then define the first Gold
+vacancy model. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
 
 ### 2026-10-21: Add the local Bronze downloader
 
-`local/download_bronze.py` now downloads the unchanged vacancy snapshot into a
-daily Bronze partition. It reuses a non-empty local snapshot and writes through
-a temporary file so interrupted transfers are not exposed as complete input.
+The original local Bronze downloader stored the unchanged vacancy snapshot in a
+daily partition. It reused a non-empty local snapshot and wrote through a
+temporary file so interrupted transfers were not exposed as complete input.
 
 ### 2026-10-25: Add the local DuckDB Silver V1 models
 
@@ -162,3 +174,11 @@ export. Source timestamps retain their time component, monetary and hour values
 use fixed-precision decimals, source identifiers remain strings, and repeated
 identifiers use typed string lists. The full snapshot build passed with 39,640
 vacancy rows.
+
+### 2026-10-28: Expand the local Bronze stage
+
+`local/build_bronze.py` now drives the complete local Bronze run for one shared
+snapshot date. Vacancy and codelist downloads live in separate modules, while a
+shared downloader preserves the existing atomic and idempotent file behavior.
+The Bronze snapshot now contains the vacancy source and all 22 MPSV codelists
+needed to resolve the identifiers used by Silver.

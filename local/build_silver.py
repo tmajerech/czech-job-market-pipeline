@@ -14,7 +14,7 @@ from silver.tables import (
 )
 
 LOCAL_DIR = Path(__file__).parent
-RAW_DIR = LOCAL_DIR / Config.RAW_PATH
+RAW_DIR = LOCAL_DIR / Config.VACANCIES_BRONZE_PATH
 DATABASE_PATH = LOCAL_DIR / "silver.duckdb"
 MAXIMUM_OBJECT_SIZE = 512 * 1024 * 1024
 SILVER_ROOT = LOCAL_DIR / Config.SILVER_PATH
