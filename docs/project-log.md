@@ -29,12 +29,11 @@ Last updated: 2026-10-28
   run reuses existing non-empty files.
 - The local Silver prototype loads one Bronze snapshot into DuckDB once and
   builds explicit temporary tables for vacancies, workplaces, benefits,
-  required skills, required languages, and contacts. Each table has one
-  class/file with its creation SQL, declared grain, shared grain validation,
-  and atomic Parquet export through `BaseTable`. The first complete local
-  snapshot exports five publishable tables; contacts are validated but omitted.
-  All six tables have explicit output type contracts validated against the
-  complete local snapshot.
+  required skills, required languages, contacts, and the first reference table
+  for CZ-ISCO occupations. Each table has one class/file with its creation SQL,
+  declared grain, shared grain validation, and atomic Parquet export through
+  `BaseTable`. Contacts are validated but omitted from public output. Published
+  tables have explicit output type contracts.
 
 ## Accepted decisions
 
@@ -130,9 +129,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Transform the Bronze codelists into typed Silver reference tables, starting with
-professions, districts, regions, and salary types. Then define the first Gold
-vacancy model. Do not deploy the incomplete Lambda transform yet.
+Continue transforming the Bronze codelists into typed Silver reference tables:
+districts, regions, and salary types are next. Then define the first Gold vacancy
+model. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -182,3 +181,10 @@ snapshot date. Vacancy and codelist downloads live in separate modules, while a
 shared downloader preserves the existing atomic and idempotent file behavior.
 The Bronze snapshot now contains the vacancy source and all 22 MPSV codelists
 needed to resolve the identifiers used by Silver.
+
+### 2026-10-29: Add the Silver occupations reference
+
+The local Silver build now expands the CZ-ISCO codelist into one occupation per
+row for the same snapshot date as vacancies. The typed `occupations` table keeps
+the source ID, code and Czech name, records the hierarchy level, and derives the
+parent occupation from the CZ-ISCO code prefix.

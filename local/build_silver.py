@@ -12,9 +12,10 @@ from silver.tables import (
     VacancyRequiredSkillsTable,
     VacancyWorkplacesTable,
 )
+from silver.tables.codelists.occupations import OccupationsTable
 
 LOCAL_DIR = Path(__file__).parent
-RAW_DIR = LOCAL_DIR / Config.VACANCIES_BRONZE_PATH
+BRONZE_ROOT = LOCAL_DIR / Config.BRONZE_PATH
 DATABASE_PATH = LOCAL_DIR / "silver.duckdb"
 MAXIMUM_OBJECT_SIZE = 512 * 1024 * 1024
 SILVER_ROOT = LOCAL_DIR / Config.SILVER_PATH
@@ -26,13 +27,23 @@ SILVER_TABLES = (
     VacancyRequiredLanguageTable,
     VacancyContactsTable,
 )
+CODELIST_TABLES = (OccupationsTable,)
 
 
 snapshot_path = max(
-    RAW_DIR.glob("snapshot_date=*/volna-mista.json.gz"),
+    BRONZE_ROOT.glob("volna-mista/snapshot_date=*/volna-mista.json.gz"),
     key=lambda path: path.parent.name,
 )
 snapshot_date = date.fromisoformat(snapshot_path.parent.name.removeprefix("snapshot_date="))
+occupations_path = (
+    BRONZE_ROOT
+    / "codelists"
+    / f"snapshot_date={snapshot_date.isoformat()}"
+    / "cz-isco.json.gz"
+)
+
+if not occupations_path.is_file():
+    raise FileNotFoundError(f"Missing occupations codelist: {occupations_path}")
 
 connection = duckdb.connect(DATABASE_PATH)
 connection.execute(
@@ -49,6 +60,22 @@ connection.execute(
     UNNEST(source.polozky) AS items(vacancy);
     """,
     [str(snapshot_path), MAXIMUM_OBJECT_SIZE],
+)
+
+connection.execute(
+    """
+    CREATE OR REPLACE TEMP TABLE staged_occupations AS
+    SELECT
+        CAST(source.snapshot_date AS DATE) AS snapshot_date,
+        occupation.*
+    FROM read_json(
+        ?,
+        hive_partitioning = true
+    ) AS source
+    CROSS JOIN LATERAL UNNEST(source.polozky)
+        AS occupations(occupation);
+    """,
+    [str(occupations_path)],
 )
 
 
@@ -115,6 +142,11 @@ if missing_columns:
     raise ValueError(f"Missing required columns: {missing_columns}")
 if extra_columns:
     raise ValueError(f"Unexpected columns found: {extra_columns}")
+
+for table in CODELIST_TABLES:
+    table.create(connection)
+    table.validate(connection)
+    table.export(connection, SILVER_ROOT, snapshot_date)
 
 for table in SILVER_TABLES:
     table.create(connection)
