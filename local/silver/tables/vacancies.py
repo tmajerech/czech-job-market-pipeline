@@ -15,7 +15,7 @@ CREATE OR REPLACE TEMP TABLE {cls.name} AS
 SELECT
     CAST(snapshot_date AS DATE) AS snapshot_date,
     CAST(portalId AS BIGINT) AS portal_id,
-    CAST(id AS VARCHAR) AS id,
+    CAST(id AS VARCHAR) AS vacancy_id,
     CAST(referencniCislo AS VARCHAR) AS reference_number,
 
     CAST(azylant AS BOOLEAN) AS asylum_seeker,
@@ -67,7 +67,7 @@ SELECT
     CAST(zamestnavatel.ico AS VARCHAR) AS employer_ico,
     CAST(zamestnavatel.nazev AS VARCHAR) AS employer_name,
 
-    CAST(profeseCzIsco.id AS VARCHAR) AS profession_cz_isco_id,
+    CAST(profeseCzIsco.id AS VARCHAR) AS occupation_id,
     CAST(
         LIST_TRANSFORM(
             pracovnePravniVztahy,
@@ -93,4 +93,39 @@ FROM staged_vacancies;
 
     @classmethod
     def validate_custom(cls, connection: duckdb.DuckDBPyConnection) -> None:
-        pass
+        unresolved_municipalities = connection.execute("""
+            SELECT
+                vacancy.portal_id,
+                vacancy.work_location_municipality_id
+            FROM vacancies AS vacancy
+            LEFT JOIN municipalities AS municipality
+                ON vacancy.snapshot_date = municipality.snapshot_date
+                AND vacancy.work_location_municipality_id = municipality.municipality_id
+            WHERE vacancy.work_location_municipality_id IS NOT NULL
+                AND municipality.municipality_id IS NULL
+            LIMIT 10
+        """).fetchall()
+
+        if unresolved_municipalities:
+            raise ValueError(
+                "Vacancies reference unknown municipalities: "
+                f"{unresolved_municipalities}"
+            )
+
+        unresolved_districts = connection.execute("""
+            SELECT
+                vacancy.portal_id,
+                district_ids.district_id
+            FROM vacancies AS vacancy
+            CROSS JOIN LATERAL UNNEST(
+                vacancy.work_location_district_ids
+            ) AS district_ids(district_id)
+            LEFT JOIN districts AS district
+                ON vacancy.snapshot_date = district.snapshot_date
+                AND district_ids.district_id = district.district_id
+            WHERE district.district_id IS NULL
+            LIMIT 10
+        """).fetchall()
+
+        if unresolved_districts:
+            raise ValueError(f"Vacancies reference unknown districts: {unresolved_districts}")

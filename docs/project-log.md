@@ -30,10 +30,11 @@ Last updated: 2026-10-29
 - The local Silver prototype loads one Bronze snapshot into DuckDB once and
   builds explicit temporary tables for vacancies, workplaces, benefits,
   required skills, required languages, contacts, and reference tables for
-  CZ-ISCO occupations, regions, and salary types. Each table has one class/file
-  with its creation SQL, declared grain, shared grain validation, and atomic
-  Parquet export through `BaseTable`. Contacts are validated but omitted from
-  public output. Published tables have explicit output type contracts.
+  CZ-ISCO occupations, regions, districts, municipalities, and salary types.
+  Each table has one class/file with its creation SQL, declared grain, shared
+  grain validation, and atomic Parquet export through `BaseTable`. Contacts are
+  validated but omitted from public output. Published tables have explicit
+  output type contracts.
 
 ## Accepted decisions
 
@@ -129,9 +130,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Add the typed Silver districts reference and validate its region relationships.
-Then define the first Gold vacancy model. Do not deploy the incomplete Lambda
-transform yet.
+Define the first Gold vacancy-region bridge with explicit handling for
+single-region, multi-region, nationwide, and unresolved locations. Do not deploy
+the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -203,3 +204,16 @@ The local Silver builder now stages codelists through one shared function driven
 by explicit `(table class, source filename)` definitions. Table-specific output
 SQL and validation remain in their individual classes; adding another codelist
 does not require duplicating its Bronze loading SQL.
+
+### 2026-10-29: Add districts and municipalities to Silver
+
+The local Silver build now publishes typed `districts` and `municipalities`
+references. Validation enforces municipality-to-district and district-to-region
+relationships and checks the non-null municipality, district, and region IDs
+used by vacancies and workplaces before export.
+
+### 2026-10-29: Standardize vacancy identifier names
+
+The Silver `vacancies` table now exposes the source vacancy identifier as
+`vacancy_id` instead of the ambiguous `id`. Its CZ-ISCO reference is named
+`occupation_id`, matching the key in the `occupations` reference table.

@@ -13,7 +13,13 @@ from silver.tables import (
     VacancyWorkplacesTable,
 )
 from silver.tables.base import BaseTable
-from silver.tables.codelists import OccupationsTable, RegionsTable, SalaryTypesTable
+from silver.tables.codelists import (
+    DistrictsTable,
+    MunicipalitiesTable,
+    OccupationsTable,
+    RegionsTable,
+    SalaryTypesTable,
+)
 
 LOCAL_DIR = Path(__file__).parent
 BRONZE_ROOT = LOCAL_DIR / Config.BRONZE_PATH
@@ -31,6 +37,8 @@ SILVER_TABLES = (
 CODELISTS: tuple[tuple[type[BaseTable], str], ...] = (
     (OccupationsTable, "cz-isco.json.gz"),
     (RegionsTable, "kraje.json.gz"),
+    (DistrictsTable, "okresy.json.gz"),
+    (MunicipalitiesTable, "obce.json.gz"),
     (SalaryTypesTable, "typy-mzdy.json.gz"),
 )
 

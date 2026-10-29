@@ -53,4 +53,28 @@ CROSS JOIN LATERAL UNNEST(
 
     @classmethod
     def validate_custom(cls, connection: duckdb.DuckDBPyConnection) -> None:
-        pass
+        references = (
+            ("region_id", "regions"),
+            ("district_id", "districts"),
+            ("municipality_id", "municipalities"),
+        )
+
+        for column, reference_table in references:
+            unresolved_values = connection.execute(f"""
+                SELECT
+                    workplace.portal_id,
+                    workplace.{column}
+                FROM vacancy_workplaces AS workplace
+                LEFT JOIN {reference_table} AS reference
+                    ON workplace.snapshot_date = reference.snapshot_date
+                    AND workplace.{column} = reference.{column}
+                WHERE workplace.{column} IS NOT NULL
+                    AND reference.{column} IS NULL
+                LIMIT 10
+            """).fetchall()
+
+            if unresolved_values:
+                raise ValueError(
+                    f"Vacancy workplaces reference unknown {column} values: "
+                    f"{unresolved_values}"
+                )
