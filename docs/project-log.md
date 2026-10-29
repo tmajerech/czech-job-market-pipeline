@@ -196,3 +196,10 @@ references from the matching Bronze snapshot. Codelist codes remain strings,
 including CZ-ISCO occupation codes whose leading zeroes carry hierarchical
 meaning. The complete build produced 1,995 occupations, 14 regions, and two
 salary types.
+
+### 2026-10-29: Share codelist staging logic
+
+The local Silver builder now stages codelists through one shared function driven
+by explicit `(table class, source filename)` definitions. Table-specific output
+SQL and validation remain in their individual classes; adding another codelist
+does not require duplicating its Bronze loading SQL.

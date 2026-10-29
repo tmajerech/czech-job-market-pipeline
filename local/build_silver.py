@@ -12,6 +12,7 @@ from silver.tables import (
     VacancyRequiredSkillsTable,
     VacancyWorkplacesTable,
 )
+from silver.tables.base import BaseTable
 from silver.tables.codelists import OccupationsTable, RegionsTable, SalaryTypesTable
 
 LOCAL_DIR = Path(__file__).parent
@@ -27,11 +28,38 @@ SILVER_TABLES = (
     VacancyRequiredLanguageTable,
     VacancyContactsTable,
 )
-CODELIST_TABLES = (
-    OccupationsTable,
-    RegionsTable,
-    SalaryTypesTable,
+CODELISTS: tuple[tuple[type[BaseTable], str], ...] = (
+    (OccupationsTable, "cz-isco.json.gz"),
+    (RegionsTable, "kraje.json.gz"),
+    (SalaryTypesTable, "typy-mzdy.json.gz"),
 )
+
+
+def stage_codelist(
+    connection: duckdb.DuckDBPyConnection,
+    codelists_directory: Path,
+    table: type[BaseTable],
+    filename: str,
+) -> None:
+    source_path = codelists_directory / filename
+    if not source_path.is_file():
+        raise FileNotFoundError(f"Missing {table.name} codelist: {source_path}")
+
+    connection.execute(
+        f"""
+        CREATE OR REPLACE TEMP TABLE staged_{table.name} AS
+        SELECT
+            CAST(source.snapshot_date AS DATE) AS snapshot_date,
+            item.*
+        FROM read_json(
+            ?,
+            hive_partitioning = true
+        ) AS source
+        CROSS JOIN LATERAL UNNEST(source.polozky)
+            AS items(item);
+        """,
+        [str(source_path)],
+    )
 
 
 snapshot_path = max(
@@ -40,16 +68,6 @@ snapshot_path = max(
 )
 snapshot_date = date.fromisoformat(snapshot_path.parent.name.removeprefix("snapshot_date="))
 codelists_directory = BRONZE_ROOT / "codelists" / f"snapshot_date={snapshot_date.isoformat()}"
-occupations_path = codelists_directory / "cz-isco.json.gz"
-regions_path = codelists_directory / "kraje.json.gz"
-salary_types_path = codelists_directory / "typy-mzdy.json.gz"
-
-if not occupations_path.is_file():
-    raise FileNotFoundError(f"Missing occupations codelist: {occupations_path}")
-if not regions_path.is_file():
-    raise FileNotFoundError(f"Missing regions codelist: {regions_path}")
-if not salary_types_path.is_file():
-    raise FileNotFoundError(f"Missing salary types codelist: {salary_types_path}")
 
 connection = duckdb.connect(DATABASE_PATH)
 connection.execute(
@@ -68,51 +86,8 @@ connection.execute(
     [str(snapshot_path), MAXIMUM_OBJECT_SIZE],
 )
 
-connection.execute(
-    """
-    CREATE OR REPLACE TEMP TABLE staged_occupations AS
-    SELECT
-        CAST(source.snapshot_date AS DATE) AS snapshot_date,
-        occupation.*
-    FROM read_json(
-        ?,
-        hive_partitioning = true
-    ) AS source
-    CROSS JOIN LATERAL UNNEST(source.polozky)
-        AS occupations(occupation);
-    """,
-    [str(occupations_path)],
-)
-connection.execute(
-    """
-    CREATE OR REPLACE TEMP TABLE staged_regions AS
-    SELECT
-        CAST(source.snapshot_date AS DATE) AS snapshot_date,
-        region.*
-    FROM read_json(
-        ?,
-        hive_partitioning = true
-    ) AS source
-    CROSS JOIN LATERAL UNNEST(source.polozky)
-        AS regions(region);
-    """,
-    [str(regions_path)],
-)
-connection.execute(
-    """
-    CREATE OR REPLACE TEMP TABLE staged_salary_types AS
-    SELECT
-        CAST(source.snapshot_date AS DATE) AS snapshot_date,
-        salary_type.*
-    FROM read_json(
-        ?,
-        hive_partitioning = true
-    ) AS source
-    CROSS JOIN LATERAL UNNEST(source.polozky)
-        AS salary_types(salary_type);
-    """,
-    [str(salary_types_path)],
-)
+for table, filename in CODELISTS:
+    stage_codelist(connection, codelists_directory, table, filename)
 
 
 # at this point we have rows with the first level unpacked
@@ -179,7 +154,7 @@ if missing_columns:
 if extra_columns:
     raise ValueError(f"Unexpected columns found: {extra_columns}")
 
-for table in CODELIST_TABLES:
+for table, _ in CODELISTS:
     table.create(connection)
     table.validate(connection)
     table.export(connection, SILVER_ROOT, snapshot_date)
