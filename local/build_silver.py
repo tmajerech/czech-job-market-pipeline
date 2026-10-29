@@ -12,7 +12,7 @@ from silver.tables import (
     VacancyRequiredSkillsTable,
     VacancyWorkplacesTable,
 )
-from silver.tables.codelists.occupations import OccupationsTable
+from silver.tables.codelists import OccupationsTable, RegionsTable, SalaryTypesTable
 
 LOCAL_DIR = Path(__file__).parent
 BRONZE_ROOT = LOCAL_DIR / Config.BRONZE_PATH
@@ -27,7 +27,11 @@ SILVER_TABLES = (
     VacancyRequiredLanguageTable,
     VacancyContactsTable,
 )
-CODELIST_TABLES = (OccupationsTable,)
+CODELIST_TABLES = (
+    OccupationsTable,
+    RegionsTable,
+    SalaryTypesTable,
+)
 
 
 snapshot_path = max(
@@ -35,15 +39,17 @@ snapshot_path = max(
     key=lambda path: path.parent.name,
 )
 snapshot_date = date.fromisoformat(snapshot_path.parent.name.removeprefix("snapshot_date="))
-occupations_path = (
-    BRONZE_ROOT
-    / "codelists"
-    / f"snapshot_date={snapshot_date.isoformat()}"
-    / "cz-isco.json.gz"
-)
+codelists_directory = BRONZE_ROOT / "codelists" / f"snapshot_date={snapshot_date.isoformat()}"
+occupations_path = codelists_directory / "cz-isco.json.gz"
+regions_path = codelists_directory / "kraje.json.gz"
+salary_types_path = codelists_directory / "typy-mzdy.json.gz"
 
 if not occupations_path.is_file():
     raise FileNotFoundError(f"Missing occupations codelist: {occupations_path}")
+if not regions_path.is_file():
+    raise FileNotFoundError(f"Missing regions codelist: {regions_path}")
+if not salary_types_path.is_file():
+    raise FileNotFoundError(f"Missing salary types codelist: {salary_types_path}")
 
 connection = duckdb.connect(DATABASE_PATH)
 connection.execute(
@@ -76,6 +82,36 @@ connection.execute(
         AS occupations(occupation);
     """,
     [str(occupations_path)],
+)
+connection.execute(
+    """
+    CREATE OR REPLACE TEMP TABLE staged_regions AS
+    SELECT
+        CAST(source.snapshot_date AS DATE) AS snapshot_date,
+        region.*
+    FROM read_json(
+        ?,
+        hive_partitioning = true
+    ) AS source
+    CROSS JOIN LATERAL UNNEST(source.polozky)
+        AS regions(region);
+    """,
+    [str(regions_path)],
+)
+connection.execute(
+    """
+    CREATE OR REPLACE TEMP TABLE staged_salary_types AS
+    SELECT
+        CAST(source.snapshot_date AS DATE) AS snapshot_date,
+        salary_type.*
+    FROM read_json(
+        ?,
+        hive_partitioning = true
+    ) AS source
+    CROSS JOIN LATERAL UNNEST(source.polozky)
+        AS salary_types(salary_type);
+    """,
+    [str(salary_types_path)],
 )
 
 

@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-28
+Last updated: 2026-10-29
 
 ## Current state
 
@@ -29,11 +29,11 @@ Last updated: 2026-10-28
   run reuses existing non-empty files.
 - The local Silver prototype loads one Bronze snapshot into DuckDB once and
   builds explicit temporary tables for vacancies, workplaces, benefits,
-  required skills, required languages, contacts, and the first reference table
-  for CZ-ISCO occupations. Each table has one class/file with its creation SQL,
-  declared grain, shared grain validation, and atomic Parquet export through
-  `BaseTable`. Contacts are validated but omitted from public output. Published
-  tables have explicit output type contracts.
+  required skills, required languages, contacts, and reference tables for
+  CZ-ISCO occupations, regions, and salary types. Each table has one class/file
+  with its creation SQL, declared grain, shared grain validation, and atomic
+  Parquet export through `BaseTable`. Contacts are validated but omitted from
+  public output. Published tables have explicit output type contracts.
 
 ## Accepted decisions
 
@@ -129,9 +129,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Continue transforming the Bronze codelists into typed Silver reference tables:
-districts, regions, and salary types are next. Then define the first Gold vacancy
-model. Do not deploy the incomplete Lambda transform yet.
+Add the typed Silver districts reference and validate its region relationships.
+Then define the first Gold vacancy model. Do not deploy the incomplete Lambda
+transform yet.
 
 ## Changes
 
@@ -188,3 +188,11 @@ The local Silver build now expands the CZ-ISCO codelist into one occupation per
 row for the same snapshot date as vacancies. The typed `occupations` table keeps
 the source ID, code and Czech name, records the hierarchy level, and derives the
 parent occupation from the CZ-ISCO code prefix.
+
+### 2026-10-29: Add regions and salary types to Silver
+
+The local Silver build now publishes typed `regions` and `salary_types`
+references from the matching Bronze snapshot. Codelist codes remain strings,
+including CZ-ISCO occupation codes whose leading zeroes carry hierarchical
+meaning. The complete build produced 1,995 occupations, 14 regions, and two
+salary types.
