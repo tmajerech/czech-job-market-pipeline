@@ -3,10 +3,10 @@ import duckdb
 from pipeline.base_table import BaseTable
 
 
-class VacancyRegionsTable(BaseTable):
+class BridgeVacancyRegionTable(BaseTable):
     """Table linking vacancies to their respective regions."""
 
-    name = "vacancy_regions"
+    name = "bridge_vacancy_region"
     grain_columns = ("snapshot_date", "portal_id", "region_id")
 
     @classmethod
@@ -91,7 +91,7 @@ WHERE region_id IS NOT NULL;
             SELECT
                 vacancy_region.snapshot_date,
                 vacancy_region.portal_id
-            FROM vacancy_regions AS vacancy_region
+            FROM bridge_vacancy_region AS vacancy_region
             LEFT JOIN stage_vacancies AS vacancy
                 ON vacancy.snapshot_date = vacancy_region.snapshot_date
                 AND vacancy.portal_id = vacancy_region.portal_id
@@ -100,13 +100,13 @@ WHERE region_id IS NOT NULL;
         """).fetchall()
 
         if unresolved_vacancies:
-            raise ValueError("Vacancy regions reference unknown vacancies: " f"{unresolved_vacancies}")
+            raise ValueError("Vacancy-region bridge references unknown vacancies: " f"{unresolved_vacancies}")
 
         unresolved_regions = connection.execute("""
             SELECT
                 vacancy_region.snapshot_date,
                 vacancy_region.region_id
-            FROM vacancy_regions AS vacancy_region
+            FROM bridge_vacancy_region AS vacancy_region
             LEFT JOIN stage_regions AS region
                 ON region.snapshot_date = vacancy_region.snapshot_date
                 AND region.region_id = vacancy_region.region_id
@@ -115,13 +115,13 @@ WHERE region_id IS NOT NULL;
         """).fetchall()
 
         if unresolved_regions:
-            raise ValueError(f"Vacancy regions reference unknown regions: {unresolved_regions}")
+            raise ValueError(f"Vacancy-region bridge references unknown regions: {unresolved_regions}")
 
         nationwide_vacancies = connection.execute("""
             SELECT
                 vacancy_region.snapshot_date,
                 vacancy_region.portal_id
-            FROM vacancy_regions AS vacancy_region
+            FROM bridge_vacancy_region AS vacancy_region
             INNER JOIN stage_vacancies AS vacancy
                 ON vacancy.snapshot_date = vacancy_region.snapshot_date
                 AND vacancy.portal_id = vacancy_region.portal_id

@@ -37,7 +37,7 @@ Last updated: 2026-10-30
   output type contracts.
 - The local Gold prototype can load every published Silver table for one
   selected snapshot into consistently named DuckDB temporary tables prefixed
-  with `stage_`. Its first model publishes a deduplicated `vacancy_regions`
+  with `stage_`. Its first model publishes a deduplicated `bridge_vacancy_region`
   bridge at the grain `(snapshot_date, portal_id, region_id)`.
 
 ## Accepted decisions
@@ -112,7 +112,7 @@ the root of `local/`.
 
 ### Keep nationwide vacancies outside regional bridges
 
-The Gold `vacancy_regions` bridge contains only explicit or inferable regional
+The Gold `bridge_vacancy_region` table contains only explicit or inferable regional
 relationships. Vacancies whose source location type is `celaCR` remain a
 separate nationwide business category rather than being duplicated across all
 14 regions, which would make regional totals non-additive.
@@ -149,9 +149,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Classify every vacancy location as single-region, multi-region, nationwide, or
-unresolved using the validated `vacancy_regions` bridge. Do not deploy the
-incomplete Lambda transform yet.
+Build `fact_vacancy_snapshot` at the grain `(snapshot_date, portal_id)`, using
+the validated `bridge_vacancy_region` table to derive `location_scope` and
+`region_count`. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -259,3 +259,10 @@ and region, validates both sides of the relationship, and publishes one atomic
 Parquet file for the selected snapshot. The `2026-10-30` build produced 43,005
 relationships for 38,594 vacancies with no null grain values, duplicates, or
 nationwide relationships.
+
+### 2026-10-30: Use dimensional-model names in Gold
+
+The vacancy-to-region relationship is published as `bridge_vacancy_region`
+rather than `vacancy_regions`. The name makes its many-to-many relationship
+role distinct from future `fact_*` observations and descriptive `dim_*`
+tables. The next Gold model is the daily `fact_vacancy_snapshot`.

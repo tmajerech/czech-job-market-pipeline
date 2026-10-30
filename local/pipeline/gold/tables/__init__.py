@@ -1,3 +1,3 @@
-from pipeline.gold.tables.vacancy_regions import VacancyRegionsTable
+from pipeline.gold.tables.bridge_vacancy_region import BridgeVacancyRegionTable
 
-__all__ = ["VacancyRegionsTable"]
+__all__ = ["BridgeVacancyRegionTable"]
