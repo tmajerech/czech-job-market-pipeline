@@ -4,12 +4,14 @@ from pathlib import Path
 import duckdb
 
 from config import Config
+from pipeline.gold.tables import VacancyRegionsTable
 from pipeline.gold.tables.stage_tables import create_stage_tables
 
 LOCAL_DIR = Path(__file__).parent
 SILVER_ROOT = LOCAL_DIR / Config.SILVER_PATH
 GOLD_ROOT = LOCAL_DIR / Config.GOLD_PATH
-DATABASE_PATH = LOCAL_DIR / "silver.duckdb"
+DATABASE_PATH = LOCAL_DIR / "gold.duckdb"
+GOLD_TABLES = (VacancyRegionsTable,)
 
 connection = duckdb.connect(DATABASE_PATH)
 
@@ -25,3 +27,8 @@ create_stage_tables(
     silver_root=SILVER_ROOT,
     snapshot_date=snapshot_date,
 )
+
+for table in GOLD_TABLES:
+    table.create(connection)
+    table.validate(connection)
+    table.export(connection, GOLD_ROOT, snapshot_date)

@@ -37,7 +37,8 @@ Last updated: 2026-10-30
   output type contracts.
 - The local Gold prototype can load every published Silver table for one
   selected snapshot into consistently named DuckDB temporary tables prefixed
-  with `stage_`.
+  with `stage_`. Its first model publishes a deduplicated `vacancy_regions`
+  bridge at the grain `(snapshot_date, portal_id, region_id)`.
 
 ## Accepted decisions
 
@@ -109,6 +110,13 @@ export. Bronze, Silver, and Gold implementations live under the common
 `local/pipeline/` namespace, while their runnable build entrypoints remain at
 the root of `local/`.
 
+### Keep nationwide vacancies outside regional bridges
+
+The Gold `vacancy_regions` bridge contains only explicit or inferable regional
+relationships. Vacancies whose source location type is `celaCR` remain a
+separate nationwide business category rather than being duplicated across all
+14 regions, which would make regional totals non-additive.
+
 ### Use one entrypoint per local data layer
 
 The local pipeline exposes `build_bronze.py`, `build_silver.py`, and eventually
@@ -141,9 +149,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Define the first Gold vacancy-region bridge with explicit handling for
-single-region, multi-region, nationwide, and unresolved locations. Do not deploy
-the incomplete Lambda transform yet.
+Classify every vacancy location as single-region, multi-region, nationwide, or
+unresolved using the validated `vacancy_regions` bridge. Do not deploy the
+incomplete Lambda transform yet.
 
 ## Changes
 
@@ -242,3 +250,12 @@ The generic table lifecycle moved out of the Silver package into
 `local/pipeline/base_table.py`. Bronze, Silver, and Gold implementation packages
 now share the `pipeline` namespace, while existing Silver models and future
 Gold models use the same validation and export behavior without duplication.
+
+### 2026-10-30: Add the Gold vacancy-region bridge
+
+The first Gold model resolves vacancy regions from structured workplaces,
+municipalities, and district lists. It stores one deduplicated row per vacancy
+and region, validates both sides of the relationship, and publishes one atomic
+Parquet file for the selected snapshot. The `2026-10-30` build produced 43,005
+relationships for 38,594 vacancies with no null grain values, duplicates, or
+nationwide relationships.
