@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-29
+Last updated: 2026-10-30
 
 ## Current state
 
@@ -35,6 +35,9 @@ Last updated: 2026-10-29
   grain validation, and atomic Parquet export through `BaseTable`. Contacts are
   validated but omitted from public output. Published tables have explicit
   output type contracts.
+- The local Gold prototype can load every published Silver table for one
+  selected snapshot into consistently named DuckDB temporary tables prefixed
+  with `stage_`.
 
 ## Accepted decisions
 
@@ -217,3 +220,10 @@ used by vacancies and workplaces before export.
 The Silver `vacancies` table now exposes the source vacancy identifier as
 `vacancy_id` instead of the ambiguous `id`. Its CZ-ISCO reference is named
 `occupation_id`, matching the key in the `occupations` reference table.
+
+### 2026-10-30: Add reusable Gold input staging
+
+The Gold table module now loads all published Silver tables for one explicit
+snapshot through a reusable function. Each input is exposed as a temporary
+`stage_<table>` table. The Gold runner selects the latest available Silver
+vacancy snapshot and passes its date to every staged input.
