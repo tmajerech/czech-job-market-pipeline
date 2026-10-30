@@ -1,7 +1,7 @@
 import duckdb
 
-from silver.tables.base import BaseTable
-from sql_expressions import extract_cs_text_sql
+from pipeline.base_table import BaseTable
+from pipeline.silver.sql_expressions import extract_cs_text_sql
 
 
 class MunicipalitiesTable(BaseTable):

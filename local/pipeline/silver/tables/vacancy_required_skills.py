@@ -1,6 +1,6 @@
 import duckdb
 
-from silver.tables.base import BaseTable
+from pipeline.base_table import BaseTable
 
 
 class VacancyRequiredSkillsTable(BaseTable):

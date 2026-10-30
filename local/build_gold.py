@@ -4,7 +4,7 @@ from pathlib import Path
 import duckdb
 
 from config import Config
-from gold.tables.stage_tables import create_stage_tables
+from pipeline.gold.tables.stage_tables import create_stage_tables
 
 LOCAL_DIR = Path(__file__).parent
 SILVER_ROOT = LOCAL_DIR / Config.SILVER_PATH

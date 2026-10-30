@@ -1,0 +1,1 @@
+"""Gold table definitions."""

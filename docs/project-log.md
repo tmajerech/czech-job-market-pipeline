@@ -101,6 +101,14 @@ Every selected Silver column is cast to its intended output type in the table's
 creation SQL. This keeps the Parquet schema stable when nullable source fields
 change their observed values between snapshots.
 
+### Share the table lifecycle across Silver and Gold
+
+Silver and Gold table models use the shared `local/pipeline/base_table.py`
+lifecycle for creation, grain validation, custom validation, and atomic Parquet
+export. Bronze, Silver, and Gold implementations live under the common
+`local/pipeline/` namespace, while their runnable build entrypoints remain at
+the root of `local/`.
+
 ### Use one entrypoint per local data layer
 
 The local pipeline exposes `build_bronze.py`, `build_silver.py`, and eventually
@@ -227,3 +235,10 @@ The Gold table module now loads all published Silver tables for one explicit
 snapshot through a reusable function. Each input is exposed as a temporary
 `stage_<table>` table. The Gold runner selects the latest available Silver
 vacancy snapshot and passes its date to every staged input.
+
+### 2026-10-30: Share the Silver and Gold table base
+
+The generic table lifecycle moved out of the Silver package into
+`local/pipeline/base_table.py`. Bronze, Silver, and Gold implementation packages
+now share the `pipeline` namespace, while existing Silver models and future
+Gold models use the same validation and export behavior without duplication.

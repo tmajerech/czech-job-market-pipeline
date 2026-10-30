@@ -1,3 +1,5 @@
+"""Shared lifecycle for materialized pipeline tables."""
+
 from abc import ABC, abstractmethod
 from datetime import date
 from pathlib import Path
@@ -38,8 +40,7 @@ class BaseTable(ABC):
             raise ValueError("Grain columns must be defined for the table")
 
         grain = ", ".join(cls.grain_columns)
-
-        null_condition = " OR ".join(f"{col} IS NULL" for col in cls.grain_columns)
+        null_condition = " OR ".join(f"{column} IS NULL" for column in cls.grain_columns)
 
         null_rows = connection.execute(f"""
             SELECT {grain}
@@ -52,18 +53,23 @@ class BaseTable(ABC):
             raise ValueError(f"Found rows with NULL values in grain columns: {null_rows}")
 
         duplicate_rows = connection.execute(f"""
-        SELECT {grain}, COUNT(*)
-        FROM {cls.name}
-        GROUP BY {grain}
-        HAVING COUNT(*) > 1
-        LIMIT 10
+            SELECT {grain}, COUNT(*)
+            FROM {cls.name}
+            GROUP BY {grain}
+            HAVING COUNT(*) > 1
+            LIMIT 10
         """).fetchall()
 
         if duplicate_rows:
             raise ValueError(f"Found duplicate rows for grain columns: {duplicate_rows}")
 
     @classmethod
-    def export(cls, connection: duckdb.DuckDBPyConnection, output_root: Path, snapshot_date: date) -> Path | None:
+    def export(
+        cls,
+        connection: duckdb.DuckDBPyConnection,
+        output_root: Path,
+        snapshot_date: date,
+    ) -> Path | None:
         if not cls.publish:
             return None
 
@@ -72,8 +78,6 @@ class BaseTable(ABC):
 
         output_path = output_directory / "part-00000.parquet"
         temporary_path = output_directory / "part-00000.parquet.tmp"
-
-        # Remove temporary file if it exists before creating a new one
         temporary_path.unlink(missing_ok=True)
 
         try:
@@ -95,7 +99,8 @@ class BaseTable(ABC):
             )
 
             exported_row = connection.execute(
-                f"SELECT COUNT(*) FROM read_parquet(?)", [str(temporary_path)]
+                "SELECT COUNT(*) FROM read_parquet(?)",
+                [str(temporary_path)],
             ).fetchone()
             if exported_row is None:
                 raise RuntimeError(f"Could not read row count from {temporary_path}")
@@ -112,4 +117,5 @@ class BaseTable(ABC):
         except Exception:
             temporary_path.unlink(missing_ok=True)
             raise
+
         return output_path

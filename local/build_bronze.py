@@ -3,8 +3,8 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from bronze import download_codelists, download_vacancies
 from config import Config
+from pipeline.bronze import download_codelists, download_vacancies
 
 
 LOCAL_DIR = Path(__file__).parent

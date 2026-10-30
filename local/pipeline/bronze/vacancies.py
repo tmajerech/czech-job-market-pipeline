@@ -1,7 +1,7 @@
 from datetime import date
 from pathlib import Path
 
-from bronze.download import download_file
+from pipeline.bronze.download import download_file
 
 
 SOURCE_URL = "https://data.mpsv.cz/od/soubory/volna-mista/volna-mista.json.gz"

@@ -4,7 +4,8 @@ from pathlib import Path
 import duckdb
 
 from config import Config
-from silver.tables import (
+from pipeline.base_table import BaseTable
+from pipeline.silver.tables import (
     VacanciesTable,
     VacancyBenefitsTable,
     VacancyContactsTable,
@@ -12,8 +13,7 @@ from silver.tables import (
     VacancyRequiredSkillsTable,
     VacancyWorkplacesTable,
 )
-from silver.tables.base import BaseTable
-from silver.tables.codelists import (
+from pipeline.silver.tables.codelists import (
     DistrictsTable,
     MunicipalitiesTable,
     OccupationsTable,

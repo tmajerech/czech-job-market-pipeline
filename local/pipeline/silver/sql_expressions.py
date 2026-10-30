@@ -1,3 +1,6 @@
+"""Reusable SQL expressions for Silver transformations."""
+
+
 def extract_cs_text_sql(source_expression: str) -> str:
     """
     Some columns are described as text but contain an object with the key "cs" that holds the text.

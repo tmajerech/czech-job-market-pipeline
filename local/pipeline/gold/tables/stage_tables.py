@@ -1,3 +1,5 @@
+"""Load one Silver snapshot into temporary Gold input tables."""
+
 from datetime import date
 from pathlib import Path
 
