@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-31
+Last updated: 2026-11-01
 
 ## Current state
 
@@ -53,7 +53,8 @@ Last updated: 2026-10-31
   the source's explicit `neurceno` member. Publication mode, work-location
   type, municipality, and contact office also have Gold dimensions. Every
   required fact reference resolves; optional location references are validated
-  whenever present.
+  whenever present. `dim_employer` contains one row per non-null IČO and uses
+  the latest updated vacancy to select its descriptive employer name.
 
 ## Accepted decisions
 
@@ -139,6 +140,14 @@ attributes. This intentionally repeats a small amount of reference data so
 business queries can filter a vacancy by municipality, district, or region
 without traversing a snowflaked municipality-to-district-to-region chain.
 
+### Identify employers only by IČO
+
+`dim_employer` contains only employers with a non-null IČO. It does not create
+name-based or unknown pseudo-identities. When one IČO has multiple observed
+names in a snapshot, the latest updated vacancy supplies the descriptive name,
+with `portal_id` as a deterministic tie-breaker. Fact rows without IČO retain a
+null employer reference; every non-null fact IČO must resolve to the dimension.
+
 ### Use one entrypoint per local data layer
 
 The local pipeline exposes `build_bronze.py`, `build_silver.py`, and eventually
@@ -147,14 +156,6 @@ and table-specific transforms remain separate modules called by those scripts.
 One Bronze run calculates the snapshot date once and passes it to every source.
 The MPSV endpoints expose only their current state, so the Bronze entrypoint
 does not accept a historical snapshot date or claim to support backfills.
-
-## Open design decisions
-
-- Keep employer data vacancy-scoped for now. A deduplicated employer dimension
-  remains a later Gold decision because IČO can be absent and names are not
-  stable keys. The `2026-10-30` snapshot has 24 vacancies without IČO, 12
-  distinct names among them, and two IČO values associated with multiple
-  names.
 
 ## Known transform issues
 
@@ -176,9 +177,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Decide whether V1 needs `dim_employer`; if it does, define its identity and
-name-history policy before implementation. Do not deploy the incomplete Lambda
-transform yet.
+Create the first business-facing Gold aggregate from the completed vacancy
+star, starting with vacancy counts and salary ranges by region and occupation.
+Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -341,3 +342,12 @@ flattened `dim_municipality` with district and region context. All current fact
 references resolve. The 12 missing work-location types and optional municipality
 references remain SQL `NULL`, while explicit source values such as `neurceno`
 remain ordinary dimension members.
+
+### 2026-11-01: Add the Gold employer dimension
+
+Gold now publishes `dim_employer` at the grain
+`(snapshot_date, employer_ico)`, selecting the employer name from the latest
+updated vacancy for each IČO. The dimension intentionally excludes vacancies
+without IČO instead of deriving identities from names, and the fact validates
+every non-null employer reference against it. The `2026-10-30` snapshot
+contains 18,161 dimension rows.

@@ -203,3 +203,20 @@ LEFT JOIN
             raise RuntimeError(
                 f"{missing_count} contact office ids in {cls.name} do not exist in dim_contact_office"
             )
+
+        # make sure all non-null employer IČOs exist in dim_employer
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_employer d
+            USING (snapshot_date, employer_ico)
+            WHERE v.employer_ico IS NOT NULL
+                AND d.employer_ico IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate employer IČOs in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(
+                f"{missing_count} employer IČOs in {cls.name} do not exist in dim_employer"
+            )

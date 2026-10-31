@@ -7,6 +7,7 @@ from config import Config
 from pipeline.gold.tables import (
     BridgeVacancyRegionTable,
     DimContactOfficeTable,
+    DimEmployerTable,
     DimMunicipalityTable,
     DimOccupationTable,
     DimPublishTypeTable,
@@ -31,6 +32,7 @@ GOLD_TABLES = (
     DimPublishTypeTable,
     DimWorkLocationTypeTable,
     DimContactOfficeTable,
+    DimEmployerTable,
     BridgeVacancyRegionTable,
     FactVacancySnapshotTable,
 )
