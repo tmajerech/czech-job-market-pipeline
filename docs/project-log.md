@@ -41,7 +41,9 @@ Last updated: 2026-10-31
   bridge at the grain `(snapshot_date, portal_id, region_id)`. The daily
   `fact_vacancy_snapshot` contains one row per vacancy and snapshot, including
   measures, dimension references, lifecycle dates, analytical flags, and the
-  derived `location_scope` and `region_count`.
+  derived `location_scope` and `region_count`. The `dim_occupation` dimension
+  publishes the descriptive CZ-ISCO occupation reference used by the fact, and
+  the fact validates every non-null occupation reference against it.
 
 ## Accepted decisions
 
@@ -155,9 +157,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Build `dim_occupation` from the staged CZ-ISCO reference and validate that each
-non-null `fact_vacancy_snapshot.occupation_id` resolves to it. Do not deploy the
-incomplete Lambda transform yet.
+Build `dim_region` from the staged region reference and validate that every
+`bridge_vacancy_region.region_id` resolves to it. Do not deploy the incomplete
+Lambda transform yet.
 
 ## Changes
 
@@ -281,3 +283,11 @@ references, lifecycle dates, and flags from Silver, then derives region counts
 and single-region, multi-region, nationwide, or unresolved location scope from
 the validated vacancy-region bridge. The `2026-10-30` build produced 40,043
 unique fact rows and matched the staged vacancy row count.
+
+### 2026-10-31: Add the Gold occupation dimension
+
+Gold now publishes `dim_occupation` from the staged Silver CZ-ISCO reference at
+the grain `(snapshot_date, occupation_id)`. It retains the code, Czech name,
+hierarchy level, and parent occupation ID so facts can resolve their occupation
+reference without depending directly on a Silver table. The fact build fails
+when a non-null occupation ID is missing from the dimension.

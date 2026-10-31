@@ -95,3 +95,18 @@ LEFT JOIN
 
         if expected_row_count != actual_row_count:
             raise RuntimeError(f"Row count mismatch: expected {expected_row_count}, got {actual_row_count}")
+
+        # make sure all the occupation ids exist in the dim_occupation table
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_occupation d
+            USING (snapshot_date, occupation_id)
+            WHERE v.occupation_id IS NOT NULL
+                AND d.occupation_id IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate occupation ids in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(f"{missing_count} occupation ids in {cls.name} do not exist in dim_occupation")
