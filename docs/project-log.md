@@ -45,7 +45,9 @@ Last updated: 2026-10-31
   publishes the descriptive CZ-ISCO occupation reference used by the fact, and
   the fact requires every occupation reference to resolve against it. The
   `dim_region` dimension publishes region descriptions used by
-  `bridge_vacancy_region`, whose region references resolve against it.
+  `bridge_vacancy_region`, whose region references resolve against it. The
+  `dim_salary_type` dimension describes monthly and hourly salary measures,
+  and every fact salary-type reference must resolve against it.
 
 ## Accepted decisions
 
@@ -159,8 +161,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Build `dim_salary_type` from the staged salary-type reference and validate the
-fact references against it. Do not deploy the incomplete Lambda transform yet.
+Add the `smennosti` reference to Silver, then publish `dim_shift_pattern` in
+Gold and validate the fact references against it. Do not deploy the incomplete
+Lambda transform yet.
 
 ## Changes
 
@@ -299,3 +302,9 @@ Gold now publishes `dim_region` from the staged Silver region reference at the
 grain `(snapshot_date, region_id)`, retaining its source code, name, and NUTS 3
 code. The vacancy-region bridge now validates region references against the
 Gold dimension rather than directly against its staged Silver input.
+
+### 2026-10-31: Add the Gold salary-type dimension
+
+Gold now publishes `dim_salary_type` from the staged Silver salary-type
+reference at the grain `(snapshot_date, salary_type_id)`. The fact build
+requires every salary-type reference to resolve to the dimension.

@@ -8,6 +8,7 @@ from pipeline.gold.tables import (
     BridgeVacancyRegionTable,
     DimOccupationTable,
     DimRegionTable,
+    DimSalaryTypeTable,
     FactVacancySnapshotTable,
 )
 from pipeline.gold.tables.stage_tables import create_stage_tables
@@ -19,6 +20,7 @@ DATABASE_PATH = LOCAL_DIR / "gold.duckdb"
 GOLD_TABLES = (
     DimOccupationTable,
     DimRegionTable,
+    DimSalaryTypeTable,
     BridgeVacancyRegionTable,
     FactVacancySnapshotTable,
 )

@@ -109,3 +109,17 @@ LEFT JOIN
         missing_count = result[0]
         if missing_count > 0:
             raise RuntimeError(f"{missing_count} occupation ids in {cls.name} do not exist in dim_occupation")
+
+        # make sure all the salary type ids exist in the dim_salary_type table
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_salary_type d
+            USING (snapshot_date, salary_type_id)
+            WHERE d.salary_type_id IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate salary type ids in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(f"{missing_count} salary type ids in {cls.name} do not exist in dim_salary_type")
