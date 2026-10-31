@@ -43,7 +43,9 @@ Last updated: 2026-10-31
   measures, dimension references, lifecycle dates, analytical flags, and the
   derived `location_scope` and `region_count`. The `dim_occupation` dimension
   publishes the descriptive CZ-ISCO occupation reference used by the fact, and
-  the fact requires every occupation reference to resolve against it.
+  the fact requires every occupation reference to resolve against it. The
+  `dim_region` dimension publishes region descriptions used by
+  `bridge_vacancy_region`, whose region references resolve against it.
 
 ## Accepted decisions
 
@@ -157,9 +159,8 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Build `dim_region` from the staged region reference and validate that every
-`bridge_vacancy_region.region_id` resolves to it. Do not deploy the incomplete
-Lambda transform yet.
+Build `dim_salary_type` from the staged salary-type reference and validate the
+fact references against it. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
 
@@ -291,3 +292,10 @@ the grain `(snapshot_date, occupation_id)`. It retains the code, Czech name,
 hierarchy level, and parent occupation ID so facts can resolve their occupation
 reference without depending directly on a Silver table. The fact build fails
 when an occupation ID is null or missing from the dimension.
+
+### 2026-10-31: Add the Gold region dimension
+
+Gold now publishes `dim_region` from the staged Silver region reference at the
+grain `(snapshot_date, region_id)`, retaining its source code, name, and NUTS 3
+code. The vacancy-region bridge now validates region references against the
+Gold dimension rather than directly against its staged Silver input.

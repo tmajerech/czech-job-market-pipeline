@@ -107,7 +107,7 @@ WHERE region_id IS NOT NULL;
                 vacancy_region.snapshot_date,
                 vacancy_region.region_id
             FROM bridge_vacancy_region AS vacancy_region
-            LEFT JOIN stage_regions AS region
+            LEFT JOIN dim_region AS region
                 ON region.snapshot_date = vacancy_region.snapshot_date
                 AND region.region_id = vacancy_region.region_id
             WHERE region.region_id IS NULL
