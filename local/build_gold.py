@@ -4,14 +4,14 @@ from pathlib import Path
 import duckdb
 
 from config import Config
-from pipeline.gold.tables import BridgeVacancyRegionTable
+from pipeline.gold.tables import BridgeVacancyRegionTable, FactVacancySnapshotTable
 from pipeline.gold.tables.stage_tables import create_stage_tables
 
 LOCAL_DIR = Path(__file__).parent
 SILVER_ROOT = LOCAL_DIR / Config.SILVER_PATH
 GOLD_ROOT = LOCAL_DIR / Config.GOLD_PATH
 DATABASE_PATH = LOCAL_DIR / "gold.duckdb"
-GOLD_TABLES = (BridgeVacancyRegionTable,)
+GOLD_TABLES = (BridgeVacancyRegionTable, FactVacancySnapshotTable)
 
 connection = duckdb.connect(DATABASE_PATH)
 

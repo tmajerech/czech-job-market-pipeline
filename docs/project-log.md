@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-10-30
+Last updated: 2026-10-31
 
 ## Current state
 
@@ -38,7 +38,10 @@ Last updated: 2026-10-30
 - The local Gold prototype can load every published Silver table for one
   selected snapshot into consistently named DuckDB temporary tables prefixed
   with `stage_`. Its first model publishes a deduplicated `bridge_vacancy_region`
-  bridge at the grain `(snapshot_date, portal_id, region_id)`.
+  bridge at the grain `(snapshot_date, portal_id, region_id)`. The daily
+  `fact_vacancy_snapshot` contains one row per vacancy and snapshot, including
+  measures, dimension references, lifecycle dates, analytical flags, and the
+  derived `location_scope` and `region_count`.
 
 ## Accepted decisions
 
@@ -146,12 +149,15 @@ not be deployed yet. Known issues include:
   `json.load` approach is expected to start around 2 GB;
 - `pandas` remains in the transform requirements even though the current
   decision is to use only PyArrow.
+- Silver vacancy partitions from `2026-10-21` and `2026-10-28` still expose the
+  superseded `profession_cz_isco_id` name. Rebuild them before querying all
+  vacancy partitions together; current outputs use `occupation_id`.
 
 ## Next step
 
-Build `fact_vacancy_snapshot` at the grain `(snapshot_date, portal_id)`, using
-the validated `bridge_vacancy_region` table to derive `location_scope` and
-`region_count`. Do not deploy the incomplete Lambda transform yet.
+Build `dim_occupation` from the staged CZ-ISCO reference and validate that each
+non-null `fact_vacancy_snapshot.occupation_id` resolves to it. Do not deploy the
+incomplete Lambda transform yet.
 
 ## Changes
 
@@ -266,3 +272,12 @@ The vacancy-to-region relationship is published as `bridge_vacancy_region`
 rather than `vacancy_regions`. The name makes its many-to-many relationship
 role distinct from future `fact_*` observations and descriptive `dim_*`
 tables. The next Gold model is the daily `fact_vacancy_snapshot`.
+
+### 2026-10-31: Add the daily vacancy snapshot fact
+
+Gold now publishes `fact_vacancy_snapshot` at the grain
+`(snapshot_date, portal_id)`. It retains analytical measures, dimension
+references, lifecycle dates, and flags from Silver, then derives region counts
+and single-region, multi-region, nationwide, or unresolved location scope from
+the validated vacancy-region bridge. The `2026-10-30` build produced 40,043
+unique fact rows and matched the staged vacancy row count.
