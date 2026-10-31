@@ -102,8 +102,7 @@ LEFT JOIN
             FROM {cls.name} v
             LEFT JOIN dim_occupation d
             USING (snapshot_date, occupation_id)
-            WHERE v.occupation_id IS NOT NULL
-                AND d.occupation_id IS NULL
+            WHERE d.occupation_id IS NULL
         """).fetchone()
         if result is None:
             raise RuntimeError(f"Could not validate occupation ids in {cls.name}")

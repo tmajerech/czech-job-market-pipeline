@@ -43,7 +43,7 @@ Last updated: 2026-10-31
   measures, dimension references, lifecycle dates, analytical flags, and the
   derived `location_scope` and `region_count`. The `dim_occupation` dimension
   publishes the descriptive CZ-ISCO occupation reference used by the fact, and
-  the fact validates every non-null occupation reference against it.
+  the fact requires every occupation reference to resolve against it.
 
 ## Accepted decisions
 
@@ -290,4 +290,4 @@ Gold now publishes `dim_occupation` from the staged Silver CZ-ISCO reference at
 the grain `(snapshot_date, occupation_id)`. It retains the code, Czech name,
 hierarchy level, and parent occupation ID so facts can resolve their occupation
 reference without depending directly on a Silver table. The fact build fails
-when a non-null occupation ID is missing from the dimension.
+when an occupation ID is null or missing from the dimension.
