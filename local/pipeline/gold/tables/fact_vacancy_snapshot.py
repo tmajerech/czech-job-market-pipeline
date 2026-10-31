@@ -123,3 +123,83 @@ LEFT JOIN
         missing_count = result[0]
         if missing_count > 0:
             raise RuntimeError(f"{missing_count} salary type ids in {cls.name} do not exist in dim_salary_type")
+
+        # make sure all the shift pattern ids exist in the dim_shift_pattern table
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_shift_pattern d
+            USING (snapshot_date, shift_pattern_id)
+            WHERE d.shift_pattern_id IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate shift pattern ids in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(f"{missing_count} shift pattern ids in {cls.name} do not exist in dim_shift_pattern")
+
+        # make sure all the publish type ids exist in the dim_publish_type table
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_publish_type d
+            USING (snapshot_date, publish_type_id)
+            WHERE d.publish_type_id IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate publish type ids in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(f"{missing_count} publish type ids in {cls.name} do not exist in dim_publish_type")
+
+        # make sure all non-null work location type ids exist in the dimension
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_work_location_type d
+            USING (snapshot_date, work_location_type_id)
+            WHERE v.work_location_type_id IS NOT NULL
+                AND d.work_location_type_id IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate work location type ids in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(
+                f"{missing_count} work location type ids in {cls.name} "
+                "do not exist in dim_work_location_type"
+            )
+
+        # make sure all non-null municipality ids exist in dim_municipality
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_municipality d
+                ON d.snapshot_date = v.snapshot_date
+                AND d.municipality_id = v.work_location_municipality_id
+            WHERE v.work_location_municipality_id IS NOT NULL
+                AND d.municipality_id IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate municipality ids in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(
+                f"{missing_count} municipality ids in {cls.name} do not exist in dim_municipality"
+            )
+
+        # make sure all contact office ids exist in dim_contact_office
+        result = connection.execute(f"""
+            SELECT COUNT(*)
+            FROM {cls.name} v
+            LEFT JOIN dim_contact_office d
+            USING (snapshot_date, contact_office_id)
+            WHERE d.contact_office_id IS NULL
+        """).fetchone()
+        if result is None:
+            raise RuntimeError(f"Could not validate contact office ids in {cls.name}")
+        missing_count = result[0]
+        if missing_count > 0:
+            raise RuntimeError(
+                f"{missing_count} contact office ids in {cls.name} do not exist in dim_contact_office"
+            )

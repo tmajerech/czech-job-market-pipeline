@@ -14,11 +14,15 @@ from pipeline.silver.tables import (
     VacancyWorkplacesTable,
 )
 from pipeline.silver.tables.codelists import (
+    ContactOfficesTable,
     DistrictsTable,
     MunicipalitiesTable,
     OccupationsTable,
+    PublishTypesTable,
     RegionsTable,
     SalaryTypesTable,
+    ShiftPatternsTable,
+    WorkLocationTypesTable,
 )
 
 LOCAL_DIR = Path(__file__).parent
@@ -40,6 +44,10 @@ CODELISTS: tuple[tuple[type[BaseTable], str], ...] = (
     (DistrictsTable, "okresy.json.gz"),
     (MunicipalitiesTable, "obce.json.gz"),
     (SalaryTypesTable, "typy-mzdy.json.gz"),
+    (ShiftPatternsTable, "smennosti.json.gz"),
+    (PublishTypesTable, "zverejnovat-vpm.json.gz"),
+    (WorkLocationTypesTable, "typy-mista-vykonu-prace.json.gz"),
+    (ContactOfficesTable, "kontaktni-pracoviste.json.gz"),
 )
 
 

@@ -6,9 +6,14 @@ import duckdb
 from config import Config
 from pipeline.gold.tables import (
     BridgeVacancyRegionTable,
+    DimContactOfficeTable,
+    DimMunicipalityTable,
     DimOccupationTable,
+    DimPublishTypeTable,
     DimRegionTable,
     DimSalaryTypeTable,
+    DimShiftPatternTable,
+    DimWorkLocationTypeTable,
     FactVacancySnapshotTable,
 )
 from pipeline.gold.tables.stage_tables import create_stage_tables
@@ -20,7 +25,12 @@ DATABASE_PATH = LOCAL_DIR / "gold.duckdb"
 GOLD_TABLES = (
     DimOccupationTable,
     DimRegionTable,
+    DimMunicipalityTable,
     DimSalaryTypeTable,
+    DimShiftPatternTable,
+    DimPublishTypeTable,
+    DimWorkLocationTypeTable,
+    DimContactOfficeTable,
     BridgeVacancyRegionTable,
     FactVacancySnapshotTable,
 )

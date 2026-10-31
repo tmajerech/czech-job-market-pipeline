@@ -30,11 +30,12 @@ Last updated: 2026-10-31
 - The local Silver prototype loads one Bronze snapshot into DuckDB once and
   builds explicit temporary tables for vacancies, workplaces, benefits,
   required skills, required languages, contacts, and reference tables for
-  CZ-ISCO occupations, regions, districts, municipalities, and salary types.
+  CZ-ISCO occupations, regions, districts, municipalities, salary types, and
+  shift patterns, publication modes, work-location types, and contact offices.
   Each table has one class/file with its creation SQL, declared grain, shared
-  grain validation, and atomic Parquet export through `BaseTable`. Contacts are
-  validated but omitted from public output. Published tables have explicit
-  output type contracts.
+  grain validation, and atomic Parquet export through `BaseTable`. Personal
+  vacancy contacts are validated but omitted from public output. Published
+  tables have explicit output type contracts.
 - The local Gold prototype can load every published Silver table for one
   selected snapshot into consistently named DuckDB temporary tables prefixed
   with `stage_`. Its first model publishes a deduplicated `bridge_vacancy_region`
@@ -47,7 +48,12 @@ Last updated: 2026-10-31
   `dim_region` dimension publishes region descriptions used by
   `bridge_vacancy_region`, whose region references resolve against it. The
   `dim_salary_type` dimension describes monthly and hourly salary measures,
-  and every fact salary-type reference must resolve against it.
+  and every fact salary-type reference must resolve against it. The
+  `dim_shift_pattern` dimension describes the vacancy work schedule, including
+  the source's explicit `neurceno` member. Publication mode, work-location
+  type, municipality, and contact office also have Gold dimensions. Every
+  required fact reference resolves; optional location references are validated
+  whenever present.
 
 ## Accepted decisions
 
@@ -126,6 +132,13 @@ relationships. Vacancies whose source location type is `celaCR` remain a
 separate nationwide business category rather than being duplicated across all
 14 regions, which would make regional totals non-additive.
 
+### Flatten municipality geography in Gold
+
+`dim_municipality` includes its district and region identifiers and descriptive
+attributes. This intentionally repeats a small amount of reference data so
+business queries can filter a vacancy by municipality, district, or region
+without traversing a snowflaked municipality-to-district-to-region chain.
+
 ### Use one entrypoint per local data layer
 
 The local pipeline exposes `build_bronze.py`, `build_silver.py`, and eventually
@@ -139,7 +152,9 @@ does not accept a historical snapshot date or claim to support backfills.
 
 - Keep employer data vacancy-scoped for now. A deduplicated employer dimension
   remains a later Gold decision because IČO can be absent and names are not
-  stable keys.
+  stable keys. The `2026-10-30` snapshot has 24 vacancies without IČO, 12
+  distinct names among them, and two IČO values associated with multiple
+  names.
 
 ## Known transform issues
 
@@ -161,9 +176,9 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Add the `smennosti` reference to Silver, then publish `dim_shift_pattern` in
-Gold and validate the fact references against it. Do not deploy the incomplete
-Lambda transform yet.
+Decide whether V1 needs `dim_employer`; if it does, define its identity and
+name-history policy before implementation. Do not deploy the incomplete Lambda
+transform yet.
 
 ## Changes
 
@@ -308,3 +323,21 @@ Gold dimension rather than directly against its staged Silver input.
 Gold now publishes `dim_salary_type` from the staged Silver salary-type
 reference at the grain `(snapshot_date, salary_type_id)`. The fact build
 requires every salary-type reference to resolve to the dimension.
+
+### 2026-10-31: Add the shift-pattern reference and dimension
+
+Silver now publishes the ten-member `shift_patterns` reference from the Bronze
+`smennosti` codelist. Gold publishes it as `dim_shift_pattern` at the grain
+`(snapshot_date, shift_pattern_id)`, and the fact build requires every shift
+pattern reference to resolve. The source's `neurceno` member remains a real
+descriptive value rather than being converted to SQL `NULL`.
+
+### 2026-10-31: Complete the codelist-backed fact dimensions
+
+Silver now publishes publication modes, work-location types, and contact
+offices. Gold publishes these as `dim_publish_type`,
+`dim_work_location_type`, and `dim_contact_office`. Gold also publishes a
+flattened `dim_municipality` with district and region context. All current fact
+references resolve. The 12 missing work-location types and optional municipality
+references remain SQL `NULL`, while explicit source values such as `neurceno`
+remain ordinary dimension members.
