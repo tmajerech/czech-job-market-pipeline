@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-11-01
+Last updated: 2026-11-12
 
 ## Current state
 
@@ -54,7 +54,9 @@ Last updated: 2026-11-01
   type, municipality, and contact office also have Gold dimensions. Every
   required fact reference resolves; optional location references are validated
   whenever present. `dim_employer` contains one row per non-null IČO and uses
-  the latest updated vacancy to select its descriptive employer name.
+  the latest updated vacancy to select its descriptive employer name. The first
+  documented analytical query reads the completed Gold star to report vacancy
+  demand by region and occupation for the latest snapshot.
 
 ## Accepted decisions
 
@@ -148,6 +150,14 @@ names in a snapshot, the latest updated vacancy supplies the descriptive name,
 with `portal_id` as a deterministic tie-breaker. Fact rows without IČO retain a
 null employer reference; every non-null fact IČO must resolve to the dimension.
 
+### Prove analytical value before materializing marts
+
+Business-facing SQL lives under `local/analytics/queries` and reads the reusable
+Gold star. An aggregate should become a materialized mart only after a repeated
+consumer, stable business contract, or measured performance need justifies its
+additional storage and pipeline maintenance. Portfolio examples may still add
+a mart later when it demonstrates that lifecycle honestly.
+
 ### Use one entrypoint per local data layer
 
 The local pipeline exposes `build_bronze.py`, `build_silver.py`, and eventually
@@ -177,11 +187,21 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Create the first business-facing Gold aggregate from the completed vacancy
-star, starting with vacancy counts and salary ranges by region and occupation.
-Do not deploy the incomplete Lambda transform yet.
+Define the V1 contract for a derived `fact_vacancy_event` table that compares
+each snapshot with the immediately preceding available snapshot. Specify event
+semantics, grain, retained dimension references, first-snapshot behavior, and
+data-quality gates before implementation. Do not deploy the incomplete Lambda
+transform yet.
 
 ## Changes
+
+### 2026-11-08: Add the first documented Gold analysis
+
+`local/analytics/queries/vacancies_by_region_and_occupation.sql` demonstrates a
+business query over the Gold fact, regional bridge, and dimensions. The
+initial materialized version was removed because the measured query is cheap
+and has no repeated consumer yet; keeping it as SQL exposes the same modeling
+and aggregation skills without adding an unjustified pipeline artifact.
 
 ### 2026-10-21: Add the local Bronze downloader
 
