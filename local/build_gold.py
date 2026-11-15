@@ -1,3 +1,4 @@
+import argparse
 from datetime import date
 from pathlib import Path
 
@@ -43,11 +44,31 @@ GOLD_TABLES = (
 
 connection = duckdb.connect(DATABASE_PATH)
 
-snapshot_directory = max(
-    (SILVER_ROOT / "vacancies").glob("snapshot_date=*"),
-    key=lambda path: path.name,
+argument_parser = argparse.ArgumentParser(
+    description="Build Gold tables from a local Silver snapshot"
 )
-snapshot_date = date.fromisoformat(snapshot_directory.name.removeprefix("snapshot_date="))
+argument_parser.add_argument(
+    "--snapshot-date",
+    type=date.fromisoformat,
+    help="Snapshot date to process; defaults to the latest Silver snapshot",
+)
+arguments = argument_parser.parse_args()
+
+if arguments.snapshot_date is None:
+    snapshot_directory = max(
+        (SILVER_ROOT / "vacancies").glob("snapshot_date=*"),
+        key=lambda path: path.name,
+    )
+    snapshot_date = date.fromisoformat(
+        snapshot_directory.name.removeprefix("snapshot_date=")
+    )
+else:
+    snapshot_date = arguments.snapshot_date
+    snapshot_directory = (
+        SILVER_ROOT / "vacancies" / f"snapshot_date={snapshot_date.isoformat()}"
+    )
+    if not snapshot_directory.is_dir():
+        raise FileNotFoundError(f"Missing Silver vacancies snapshot: {snapshot_directory}")
 
 # First load the selected Silver snapshot into stage tables.
 create_stage_tables(

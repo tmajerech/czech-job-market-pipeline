@@ -1,3 +1,4 @@
+import argparse
 from datetime import date
 from pathlib import Path
 
@@ -78,11 +79,35 @@ def stage_codelist(
     )
 
 
-snapshot_path = max(
-    BRONZE_ROOT.glob("volna-mista/snapshot_date=*/volna-mista.json.gz"),
-    key=lambda path: path.parent.name,
+argument_parser = argparse.ArgumentParser(
+    description="Build Silver tables from a local Bronze snapshot"
 )
-snapshot_date = date.fromisoformat(snapshot_path.parent.name.removeprefix("snapshot_date="))
+argument_parser.add_argument(
+    "--snapshot-date",
+    type=date.fromisoformat,
+    help="Snapshot date to process; defaults to the latest Bronze snapshot",
+)
+arguments = argument_parser.parse_args()
+
+if arguments.snapshot_date is None:
+    snapshot_path = max(
+        BRONZE_ROOT.glob("volna-mista/snapshot_date=*/volna-mista.json.gz"),
+        key=lambda path: path.parent.name,
+    )
+    snapshot_date = date.fromisoformat(
+        snapshot_path.parent.name.removeprefix("snapshot_date=")
+    )
+else:
+    snapshot_date = arguments.snapshot_date
+    snapshot_path = (
+        BRONZE_ROOT
+        / "volna-mista"
+        / f"snapshot_date={snapshot_date.isoformat()}"
+        / "volna-mista.json.gz"
+    )
+    if not snapshot_path.is_file():
+        raise FileNotFoundError(f"Missing Bronze vacancy snapshot: {snapshot_path}")
+
 codelists_directory = BRONZE_ROOT / "codelists" / f"snapshot_date={snapshot_date.isoformat()}"
 
 connection = duckdb.connect(DATABASE_PATH)

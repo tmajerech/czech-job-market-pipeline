@@ -61,6 +61,12 @@ Last updated: 2026-11-15
   with the closest earlier published Gold snapshot. It records `NEW` and
   `REMOVED` vacancies at `(snapshot_date, portal_id)` grain; the first snapshot
   has no event partition because it has no predecessor.
+- Historical local Silver and Gold outputs can be rebuilt with
+  `local/rebuild_all.py`; individual layer builders accept `--snapshot-date`
+  for targeted reruns.
+- Silver and Gold snapshots from `2026-10-28` through `2026-11-15` were
+  rebuilt. The `2026-10-21` Bronze vacancy snapshot and its five Silver outputs
+  were removed because no matching Bronze codelists were archived.
 
 ## Accepted decisions
 
@@ -196,6 +202,23 @@ and review whether it answers a useful business question. Do not deploy the
 incomplete Lambda transform yet.
 
 ## Changes
+
+### 2026-11-15: Rebuild historical local outputs
+
+Rebuilt Silver and Gold chronologically for all six Bronze vacancy snapshots
+with matching codelists, from `2026-10-28` through `2026-11-15`. Removed the
+`2026-10-21` Bronze vacancy file and its five Silver partitions because its
+required codelists were unavailable, so that snapshot could not be reproduced
+faithfully. The rebuilt vacancy counts match between Silver and Gold for every
+processed date.
+
+### 2026-11-15: Add a historical local rebuild command
+
+`local/rebuild_all.py` rebuilds every Silver snapshot with a matching local
+Bronze vacancy file, then rebuilds the available Silver-backed Gold snapshots
+in chronological order. This order preserves the prior-snapshot dependency of
+`fact_vacancy_event`. The layer builders accept an optional `--snapshot-date`
+for targeted reprocessing, while their default remains the latest snapshot.
 
 ### 2026-11-15: Add the Gold vacancy change fact
 
