@@ -15,9 +15,13 @@ from pipeline.gold.tables import (
     DimSalaryTypeTable,
     DimShiftPatternTable,
     DimWorkLocationTypeTable,
+    FactVacancyEventTable,
     FactVacancySnapshotTable,
 )
-from pipeline.gold.tables.stage_tables import create_stage_tables
+from pipeline.gold.tables.stage_tables import (
+    create_stage_tables,
+    stage_previous_fact_vacancy_snapshot,
+)
 
 LOCAL_DIR = Path(__file__).parent
 SILVER_ROOT = LOCAL_DIR / Config.SILVER_PATH
@@ -56,3 +60,14 @@ for table in GOLD_TABLES:
     table.create(connection)
     table.validate(connection)
     table.export(connection, GOLD_ROOT, snapshot_date)
+
+previous_snapshot_date = stage_previous_fact_vacancy_snapshot(
+    connection=connection,
+    gold_root=GOLD_ROOT,
+    current_snapshot_date=snapshot_date,
+)
+
+if previous_snapshot_date is not None:
+    FactVacancyEventTable.create(connection)
+    FactVacancyEventTable.validate(connection)
+    FactVacancyEventTable.export(connection, GOLD_ROOT, snapshot_date)

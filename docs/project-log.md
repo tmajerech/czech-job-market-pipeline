@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-11-12
+Last updated: 2026-11-15
 
 ## Current state
 
@@ -57,6 +57,10 @@ Last updated: 2026-11-12
   the latest updated vacancy to select its descriptive employer name. The first
   documented analytical query reads the completed Gold star to report vacancy
   demand by region and occupation for the latest snapshot.
+- Gold derives `fact_vacancy_event` by comparing the current snapshot fact
+  with the closest earlier published Gold snapshot. It records `NEW` and
+  `REMOVED` vacancies at `(snapshot_date, portal_id)` grain; the first snapshot
+  has no event partition because it has no predecessor.
 
 ## Accepted decisions
 
@@ -187,13 +191,19 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Define the V1 contract for a derived `fact_vacancy_event` table that compares
-each snapshot with the immediately preceding available snapshot. Specify event
-semantics, grain, retained dimension references, first-snapshot behavior, and
-data-quality gates before implementation. Do not deploy the incomplete Lambda
-transform yet.
+Use the event fact in an analytical query comparing the latest two snapshots,
+and review whether it answers a useful business question. Do not deploy the
+incomplete Lambda transform yet.
 
 ## Changes
+
+### 2026-11-15: Add the Gold vacancy change fact
+
+The Gold build stages the closest earlier published `fact_vacancy_snapshot`
+partition and compares it with the current snapshot. `fact_vacancy_event`
+records only `NEW` and `REMOVED` rows, validates event semantics, and exports
+under the current snapshot date. The first snapshot skips the event table
+because there is no prior state to compare.
 
 ### 2026-11-08: Add the first documented Gold analysis
 

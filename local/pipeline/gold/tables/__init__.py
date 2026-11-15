@@ -8,6 +8,7 @@ from pipeline.gold.tables.dim_region import DimRegionTable
 from pipeline.gold.tables.dim_salary_type import DimSalaryTypeTable
 from pipeline.gold.tables.dim_shift_pattern import DimShiftPatternTable
 from pipeline.gold.tables.dim_work_location_type import DimWorkLocationTypeTable
+from pipeline.gold.tables.fact_vacancy_event import FactVacancyEventTable
 from pipeline.gold.tables.fact_vacancy_snapshot import FactVacancySnapshotTable
 
 __all__ = [
@@ -21,5 +22,6 @@ __all__ = [
     "DimSalaryTypeTable",
     "DimShiftPatternTable",
     "DimWorkLocationTypeTable",
+    "FactVacancyEventTable",
     "FactVacancySnapshotTable",
 ]
