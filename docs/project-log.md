@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-11-15
+Last updated: 2026-11-18
 
 ## Current state
 
@@ -197,11 +197,18 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Use the event fact in an analytical query comparing the latest two snapshots,
-and review whether it answers a useful business question. Do not deploy the
-incomplete Lambda transform yet.
+Try the vacancy-change-by-occupation query for other snapshot dates and review
+whether its net-change result answers a useful business question. Do not deploy
+the incomplete Lambda transform yet.
 
 ## Changes
+
+### 2026-11-18: Add a vacancy-change analysis query
+
+Added `local/analytics/queries/vacancy_changes_by_occupation.sql` to compare
+new and removed vacancies by occupation for a selected snapshot interval. For
+removed vacancies, occupation attributes are resolved from the previous
+snapshot; new vacancies use the current snapshot.
 
 ### 2026-11-15: Rebuild historical local outputs
 
