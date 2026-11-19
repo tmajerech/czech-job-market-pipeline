@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-11-18
+Last updated: 2026-11-19
 
 ## Current state
 
@@ -61,6 +61,9 @@ Last updated: 2026-11-18
   with the closest earlier published Gold snapshot. It records `NEW` and
   `REMOVED` vacancies at `(snapshot_date, portal_id)` grain; the first snapshot
   has no event partition because it has no predecessor.
+- The local pytest suite covers generic grain validation, Gold vacancy event
+  behavior, and rejection of an unresolved occupation reference; run it with
+  `cd local && .venv/bin/python -m pytest`.
 - Historical local Silver and Gold outputs can be rebuilt with
   `local/rebuild_all.py`; individual layer builders accept `--snapshot-date`
   for targeted reruns.
@@ -197,11 +200,16 @@ not be deployed yet. Known issues include:
 
 ## Next step
 
-Try the vacancy-change-by-occupation query for other snapshot dates and review
-whether its net-change result answers a useful business question. Do not deploy
-the incomplete Lambda transform yet.
+Extend offline tests to cover more Gold dimension and bridge references. Do not
+deploy the incomplete Lambda transform yet.
 
 ## Changes
+
+### 2026-11-19: Start local unit tests
+
+Added in-memory DuckDB tests for grain rules, `NEW`/`REMOVED` event derivation
+and validation, and rejection of an unresolved occupation reference. The
+tests use synthetic rows and require no network or archived snapshots.
 
 ### 2026-11-18: Add a vacancy-change analysis query
 
