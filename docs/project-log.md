@@ -61,8 +61,9 @@ Last updated: 2026-11-20
   with the closest earlier published Gold snapshot. It records `NEW` and
   `REMOVED` vacancies at `(snapshot_date, portal_id)` grain; the first snapshot
   has no event partition because it has no predecessor.
-- The local pytest suite covers grain validation, Gold vacancy event behavior,
-  occupation references, and location/region bridge validation; run it with
+- The local pytest suite includes unit, database-backed, and end-to-end tests.
+  Its E2E case builds Silver and Gold from two synthetic Bronze snapshots in
+  temporary directories; run all tests with
   `cd local && .venv/bin/python -m pytest`.
 - Historical local Silver and Gold outputs can be rebuilt with
   `local/rebuild_all.py`; individual layer builders accept `--snapshot-date`
@@ -204,6 +205,14 @@ Add focused tests for other required Gold fact dimension references when their
 validation logic changes. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
+
+### 2026-11-20: Add a local Bronze-to-Gold end-to-end test
+
+Refactored the Silver and Gold builders into callable snapshot functions with
+injectable input, output, and database paths; their existing CLI entrypoints
+delegate to those functions. Added a two-snapshot E2E test that generates small
+synthetic Bronze JSON files, runs both layers chronologically, and checks the
+exported Gold facts and vacancy events without touching local project data.
 
 ### 2026-11-20: Test Gold location references
 

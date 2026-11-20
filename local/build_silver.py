@@ -1,4 +1,5 @@
 import argparse
+from collections.abc import Sequence
 from datetime import date
 from pathlib import Path
 
@@ -79,28 +80,14 @@ def stage_codelist(
     )
 
 
-argument_parser = argparse.ArgumentParser(
-    description="Build Silver tables from a local Bronze snapshot"
-)
-argument_parser.add_argument(
-    "--snapshot-date",
-    type=date.fromisoformat,
-    help="Snapshot date to process; defaults to the latest Bronze snapshot",
-)
-arguments = argument_parser.parse_args()
-
-if arguments.snapshot_date is None:
-    snapshot_path = max(
-        BRONZE_ROOT.glob("volna-mista/snapshot_date=*/volna-mista.json.gz"),
-        key=lambda path: path.parent.name,
-    )
-    snapshot_date = date.fromisoformat(
-        snapshot_path.parent.name.removeprefix("snapshot_date=")
-    )
-else:
-    snapshot_date = arguments.snapshot_date
+def build_silver_snapshot(
+    snapshot_date: date,
+    bronze_root: Path = BRONZE_ROOT,
+    silver_root: Path = SILVER_ROOT,
+    database_path: Path = DATABASE_PATH,
+) -> None:
     snapshot_path = (
-        BRONZE_ROOT
+        bronze_root
         / "volna-mista"
         / f"snapshot_date={snapshot_date.isoformat()}"
         / "volna-mista.json.gz"
@@ -108,99 +95,132 @@ else:
     if not snapshot_path.is_file():
         raise FileNotFoundError(f"Missing Bronze vacancy snapshot: {snapshot_path}")
 
-codelists_directory = BRONZE_ROOT / "codelists" / f"snapshot_date={snapshot_date.isoformat()}"
+    codelists_directory = (
+        bronze_root / "codelists" / f"snapshot_date={snapshot_date.isoformat()}"
+    )
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    connection = duckdb.connect(str(database_path))
+    try:
+        connection.execute(
+            """
+            CREATE OR REPLACE TEMP TABLE staged_vacancies AS
+            SELECT
+                CAST(source.snapshot_date AS DATE) AS snapshot_date,
+                vacancy.*
+            FROM read_json(
+                ?,
+                maximum_object_size = ?,
+                hive_partitioning = true
+            ) AS source,
+            UNNEST(source.polozky) AS items(vacancy);
+            """,
+            [str(snapshot_path), MAXIMUM_OBJECT_SIZE],
+        )
 
-connection = duckdb.connect(DATABASE_PATH)
-connection.execute(
-    """
-    CREATE OR REPLACE TEMP TABLE staged_vacancies AS
-    SELECT
-        CAST(source.snapshot_date AS DATE) AS snapshot_date,
-        vacancy.*
-    FROM read_json(
-        ?,
-        maximum_object_size = ?,
-        hive_partitioning = true
-    ) AS source,
-    UNNEST(source.polozky) AS items(vacancy);
-    """,
-    [str(snapshot_path), MAXIMUM_OBJECT_SIZE],
-)
+        for table, filename in CODELISTS:
+            stage_codelist(connection, codelists_directory, table, filename)
 
-for table, filename in CODELISTS:
-    stage_codelist(connection, codelists_directory, table, filename)
+        # Make sure the source has all required columns and no unknown columns.
+        required_columns = {
+            "id",
+            "portalId",
+            "mistoVykonuPrace",
+            "zamestnavatel",
+            "prvniKontaktSeZamestnavatelem",
+        }
+
+        known_columns = required_columns | {
+            "snapshot_date",  # technical column
+            "azylant",
+            "cizinecMimoEu",
+            "datumVlozeni",
+            "datumZmeny",
+            "expirace",
+            "kontaktniPracoviste",
+            "mesicniMzdaDo",
+            "mesicniMzdaOd",
+            "minPozadovaneVzdelani",
+            "modraKarta",
+            "pocetHodinTydne",
+            "pocetMist",
+            "pozadovanaDovednost",
+            "pozadovanaJazykovaZnalost",
+            "pozadovanaProfese",
+            "pozadovanePovolani",
+            "pozadovaneVzdelani",
+            "pracovnePravniVztahy",
+            "profeseCzIsco",
+            "referencniCislo",
+            "smennost",
+            "souhlasAgenturyAgentura",
+            "souhlasAgenturyUzivatel",
+            "statniSpravaSamosprava",
+            "terminUkonceniPracovnihoPomeru",
+            "terminZahajeniPracovnihoPomeru",
+            "typMzdy",
+            "upresnujiciInformace",
+            "urlAdresa",
+            "vhodnostiPracovnihoMista",
+            "vyhodyVolnehoMista",
+            "zamestnaneckaKarta",
+            "zverejnovat",
+        }
+
+        source_columns = {
+            row[0]
+            for row in connection.execute("""
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_schema = current_schema()
+                    AND UPPER(table_name) = 'STAGED_VACANCIES'
+                ORDER BY ordinal_position
+            """).fetchall()
+        }
+        missing_columns = required_columns - source_columns
+        extra_columns = source_columns - known_columns
+
+        if missing_columns:
+            raise ValueError(f"Missing required columns: {missing_columns}")
+        if extra_columns:
+            raise ValueError(f"Unexpected columns found: {extra_columns}")
+
+        for table, _ in CODELISTS:
+            table.create(connection)
+            table.validate(connection)
+            table.export(connection, silver_root, snapshot_date)
+
+        for table in SILVER_TABLES:
+            table.create(connection)
+            table.validate(connection)
+            table.export(connection, silver_root, snapshot_date)
+    finally:
+        connection.close()
 
 
-# at this point we have rows with the first level unpacked
+def main(argv: Sequence[str] | None = None) -> None:
+    argument_parser = argparse.ArgumentParser(
+        description="Build Silver tables from a local Bronze snapshot"
+    )
+    argument_parser.add_argument(
+        "--snapshot-date",
+        type=date.fromisoformat,
+        help="Snapshot date to process; defaults to the latest Bronze snapshot",
+    )
+    arguments = argument_parser.parse_args(argv)
 
-# make sure we have only the expected columns and none are missing
-required_columns = {
-    "id",
-    "portalId",
-    "mistoVykonuPrace",
-    "zamestnavatel",
-    "prvniKontaktSeZamestnavatelem",
-}
+    if arguments.snapshot_date is None:
+        snapshot_path = max(
+            BRONZE_ROOT.glob("volna-mista/snapshot_date=*/volna-mista.json.gz"),
+            key=lambda path: path.parent.name,
+        )
+        snapshot_date = date.fromisoformat(
+            snapshot_path.parent.name.removeprefix("snapshot_date=")
+        )
+    else:
+        snapshot_date = arguments.snapshot_date
+
+    build_silver_snapshot(snapshot_date)
 
 
-known_columns = required_columns | {
-    "snapshot_date",  # technical column
-    "azylant",
-    "cizinecMimoEu",
-    "datumVlozeni",
-    "datumZmeny",
-    "expirace",
-    "kontaktniPracoviste",
-    "mesicniMzdaDo",
-    "mesicniMzdaOd",
-    "minPozadovaneVzdelani",
-    "modraKarta",
-    "pocetHodinTydne",
-    "pocetMist",
-    "pozadovanaDovednost",
-    "pozadovanaJazykovaZnalost",
-    "pozadovanaProfese",
-    "pozadovanePovolani",
-    "pozadovaneVzdelani",
-    "pracovnePravniVztahy",
-    "profeseCzIsco",
-    "referencniCislo",
-    "smennost",
-    "souhlasAgenturyAgentura",
-    "souhlasAgenturyUzivatel",
-    "statniSpravaSamosprava",
-    "terminUkonceniPracovnihoPomeru",
-    "terminZahajeniPracovnihoPomeru",
-    "typMzdy",
-    "upresnujiciInformace",
-    "urlAdresa",
-    "vhodnostiPracovnihoMista",
-    "vyhodyVolnehoMista",
-    "zamestnaneckaKarta",
-    "zverejnovat",
-}
-
-source_columns = {row[0] for row in connection.execute("""
-        SELECT column_name
-        FROM information_schema.columns
-        WHERE table_schema = current_schema()
-            AND UPPER(table_name) = 'STAGED_VACANCIES'
-        ORDER BY ordinal_position
-    """).fetchall()}
-missing_columns = required_columns - source_columns
-extra_columns = source_columns - known_columns
-
-if missing_columns:
-    raise ValueError(f"Missing required columns: {missing_columns}")
-if extra_columns:
-    raise ValueError(f"Unexpected columns found: {extra_columns}")
-
-for table, _ in CODELISTS:
-    table.create(connection)
-    table.validate(connection)
-    table.export(connection, SILVER_ROOT, snapshot_date)
-
-for table in SILVER_TABLES:
-    table.create(connection)
-    table.validate(connection)
-    table.export(connection, SILVER_ROOT, snapshot_date)
+if __name__ == "__main__":
+    main()
