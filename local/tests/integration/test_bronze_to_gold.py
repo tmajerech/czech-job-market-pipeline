@@ -1,6 +1,9 @@
+import gzip
+import json
 from datetime import date
 
 import duckdb
+import pytest
 
 from build_gold import build_gold_snapshot
 from build_silver import build_silver_snapshot
@@ -86,3 +89,32 @@ def test_two_bronze_snapshots_build_silver_gold_and_events(tmp_path) -> None:
         (100, "single_region", 1),
         (300, "single_region", 1),
     ]
+
+
+def test_silver_build_rejects_missing_required_bronze_column(tmp_path) -> None:
+    snapshot_date = date(2026, 11, 20)
+    bronze_root = tmp_path / "bronze"
+    silver_root = tmp_path / "silver"
+    write_snapshot(bronze_root, snapshot_date, (100,))
+
+    vacancy_file = (
+        bronze_root
+        / "volna-mista"
+        / f"snapshot_date={snapshot_date.isoformat()}"
+        / "volna-mista.json.gz"
+    )
+    with gzip.open(vacancy_file, "rt", encoding="utf-8") as source_file:
+        payload = json.load(source_file)
+    del payload["polozky"][0]["zamestnavatel"]
+    with gzip.open(vacancy_file, "wt", encoding="utf-8") as source_file:
+        json.dump(payload, source_file, ensure_ascii=False)
+
+    with pytest.raises(ValueError, match="Missing required columns:.*zamestnavatel"):
+        build_silver_snapshot(
+            snapshot_date,
+            bronze_root=bronze_root,
+            silver_root=silver_root,
+            database_path=tmp_path / "databases" / "silver.duckdb",
+        )
+
+    assert not (silver_root / "vacancies").exists()
