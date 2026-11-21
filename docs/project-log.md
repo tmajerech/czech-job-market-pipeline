@@ -66,7 +66,9 @@ Last updated: 2026-11-21
 - Silver and Gold create and validate all tables before exporting them to a
   same-filesystem staging root. Final files are replaced under snapshot-level
   `_INCOMPLETE` and `_SUCCESS` markers; in-repository readers reject an
-  incomplete publication while accepting pre-marker legacy snapshots.
+  incomplete publication while accepting pre-marker legacy snapshots. Local
+  publication is intentionally single-writer; operational and recovery steps
+  are documented in `docs/local-pipeline-operations.md`.
 - The local pytest suite includes unit, database-backed, and end-to-end tests.
   Its E2E case builds Silver and Gold from two synthetic Bronze snapshots in
   temporary directories and confirms Silver rejects a missing required Bronze
@@ -79,10 +81,9 @@ Last updated: 2026-11-21
 - Silver and Gold snapshots from `2026-10-28` through `2026-11-15` were
   rebuilt. The `2026-10-21` Bronze vacancy snapshot and its five Silver outputs
   were removed because no matching Bronze codelists were archived.
-- Committed notebook outputs were cleared and Jupyter checkpoint directories
-  are ignored so the current tree does not expose vacancy contact PII. The old
-  notebook outputs remain in existing Git history and must be purged before
-  this repository is published.
+- Jupyter checkpoint directories are ignored. Git history was rewritten to
+  remove every historical `Untitled.ipynb` and checkpoint version that carried
+  vacancy contact PII; only the current output-free notebook was added back.
 
 ## Accepted decisions
 
@@ -166,7 +167,17 @@ Because `fact_vacancy_event` depends on two adjacent fact snapshots, rebuilding
 a historical Gold snapshot also rebuilds the event partition for the closest
 later snapshot after the historical publication succeeds. A failed historical
 publication is confined to the snapshot being rebuilt and does not invalidate
-later snapshots.
+later snapshots. If the dependent event refresh fails after that publication,
+rerun Gold directly for the incomplete later snapshot as described in
+`docs/local-pipeline-operations.md`.
+
+### Keep local publication single-writer
+
+The local demo documents, rather than implements, concurrency control. Run one
+local build process at a time; in particular, do not overlap publishers for the
+same `(layer, snapshot_date)` or an upstream rebuild with its downstream
+reader. Add locking and dependency-aware orchestration before scheduling the
+pipeline, running it in CI, or sharing one publication root between operators.
 
 ### Keep nationwide vacancies outside regional bridges
 
@@ -231,6 +242,14 @@ Add focused tests for other required Gold fact dimension references when their
 validation logic changes. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
+
+### 2026-11-21: Document recovery and purge notebook PII history
+
+Added a local operations runbook that defines sequential execution, the
+single-writer constraint, marker semantics, and recovery for ordinary and
+historical Gold failures. Rewrote all local Git refs to remove historical
+versions of `Untitled.ipynb` and its checkpoint, expired reflogs, pruned
+unreachable objects, and added back only the sanitized output-free notebook.
 
 ### 2026-11-21: Make local snapshot publication failure-safe
 
