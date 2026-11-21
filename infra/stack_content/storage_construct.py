@@ -20,6 +20,8 @@ class StorageConstruct(Construct):
             "DataBucket",
             bucket_name="meddea-jobs-data",
             versioned=True,
+            # Production should use RETAIN because historical snapshots cannot be
+            # reconstructed. DESTROY is intentional while this remains a demo.
             removal_policy=RemovalPolicy.DESTROY,
             auto_delete_objects=True,
         )

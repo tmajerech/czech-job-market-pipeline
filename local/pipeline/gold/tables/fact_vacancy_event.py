@@ -13,21 +13,10 @@ class FactVacancyEventTable(BaseTable):
     def create_sql(cls) -> str:
         return f"""
 CREATE OR REPLACE TEMP TABLE {cls.name} AS
-WITH current_snapshot_date AS (
-    SELECT snapshot_date
-    FROM fact_vacancy_snapshot
-    GROUP BY snapshot_date
-),
-previous_snapshot_date AS (
-    SELECT snapshot_date
-    FROM stage_previous_fact_vacancy_snapshot
-    GROUP BY snapshot_date
-)
 SELECT
-    current_snapshot_date.snapshot_date,
+    snapshot_context.snapshot_date,
     portal_id,
-    previous_snapshot_date.snapshot_date
-        AS previous_snapshot_date,
+    snapshot_context.previous_snapshot_date,
     CASE
         WHEN current_vacancy.portal_id IS NOT NULL
             AND previous_vacancy.portal_id IS NULL
@@ -39,8 +28,7 @@ SELECT
 FROM fact_vacancy_snapshot AS current_vacancy
 FULL OUTER JOIN stage_previous_fact_vacancy_snapshot AS previous_vacancy
     USING (portal_id)
-CROSS JOIN current_snapshot_date
-CROSS JOIN previous_snapshot_date
+CROSS JOIN event_snapshot_context AS snapshot_context
 WHERE current_vacancy.portal_id IS NULL
     OR previous_vacancy.portal_id IS NULL;
 """

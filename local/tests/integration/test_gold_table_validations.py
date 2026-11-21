@@ -4,6 +4,7 @@ import pytest
 
 from pipeline.gold.tables.fact_vacancy_event import FactVacancyEventTable
 from pipeline.gold.tables.fact_vacancy_snapshot import FactVacancySnapshotTable
+from pipeline.gold.tables.stage_tables import create_event_snapshot_context
 
 
 def test_event_fact_emits_new_and_removed_but_not_unchanged(connection) -> None:
@@ -17,6 +18,11 @@ def test_event_fact_emits_new_and_removed_but_not_unchanged(connection) -> None:
         SELECT DATE '2026-11-08' AS snapshot_date, portal_id
         FROM (VALUES (11), (12)) AS vacancies(portal_id)
     """)
+    create_event_snapshot_context(
+        connection,
+        snapshot_date=date(2026, 11, 14),
+        previous_snapshot_date=date(2026, 11, 8),
+    )
 
     FactVacancyEventTable.create(connection)
     events = connection.execute("""
@@ -43,6 +49,11 @@ def test_event_fact_rejects_event_inconsistent_with_source_snapshots(connection)
         SELECT DATE '2026-11-08' AS snapshot_date, portal_id
         FROM (VALUES (11)) AS vacancies(portal_id)
     """)
+    create_event_snapshot_context(
+        connection,
+        snapshot_date=date(2026, 11, 14),
+        previous_snapshot_date=date(2026, 11, 8),
+    )
     FactVacancyEventTable.create(connection)
     connection.execute("""
         UPDATE fact_vacancy_event

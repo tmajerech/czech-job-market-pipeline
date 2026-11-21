@@ -13,6 +13,7 @@ analysis/
 # Local Python artifacts.
 .venv/
 __pycache__/
+.ipynb_checkpoints/
 *.pyc
 .DS_Store
 

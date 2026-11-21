@@ -7,6 +7,7 @@ import duckdb
 
 from config import Config
 from pipeline.base_table import BaseTable
+from pipeline.snapshot_publish import publish_staged_snapshot, temporary_output_root
 from pipeline.silver.tables import (
     VacanciesTable,
     VacancyBenefitsTable,
@@ -184,15 +185,23 @@ def build_silver_snapshot(
         if extra_columns:
             raise ValueError(f"Unexpected columns found: {extra_columns}")
 
-        for table, _ in CODELISTS:
-            table.create(connection)
-            table.validate(connection)
-            table.export(connection, silver_root, snapshot_date)
+        tables = tuple(table for table, _ in CODELISTS) + SILVER_TABLES
 
-        for table in SILVER_TABLES:
+        for table in tables:
             table.create(connection)
             table.validate(connection)
-            table.export(connection, silver_root, snapshot_date)
+
+        published_tables = tuple(table for table in tables if table.publish)
+        with temporary_output_root(silver_root, snapshot_date) as staged_root:
+            for table in published_tables:
+                table.export(connection, staged_root, snapshot_date)
+
+            publish_staged_snapshot(
+                staged_root=staged_root,
+                output_root=silver_root,
+                snapshot_date=snapshot_date,
+                table_names=(table.name for table in published_tables),
+            )
     finally:
         connection.close()
 

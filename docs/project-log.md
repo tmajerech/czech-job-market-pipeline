@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-11-20
+Last updated: 2026-11-21
 
 ## Current state
 
@@ -60,10 +60,18 @@ Last updated: 2026-11-20
 - Gold derives `fact_vacancy_event` by comparing the current snapshot fact
   with the closest earlier published Gold snapshot. It records `NEW` and
   `REMOVED` vacancies at `(snapshot_date, portal_id)` grain; the first snapshot
-  has no event partition because it has no predecessor.
+  has no event partition because it has no predecessor. A targeted historical
+  Gold rebuild also refreshes the event partition of the closest later fact
+  snapshot so that it cannot retain events derived from stale history.
+- Silver and Gold create and validate all tables before exporting them to a
+  same-filesystem staging root. Final files are replaced under snapshot-level
+  `_INCOMPLETE` and `_SUCCESS` markers; in-repository readers reject an
+  incomplete publication while accepting pre-marker legacy snapshots.
 - The local pytest suite includes unit, database-backed, and end-to-end tests.
   Its E2E case builds Silver and Gold from two synthetic Bronze snapshots in
-  temporary directories; run all tests with
+  temporary directories and confirms Silver rejects a missing required Bronze
+  column, failed rebuilds preserve the previous published snapshot, and
+  targeted Gold rebuilds refresh dependent vacancy events; run all tests with
   `cd local && .venv/bin/python -m pytest`.
 - Historical local Silver and Gold outputs can be rebuilt with
   `local/rebuild_all.py`; individual layer builders accept `--snapshot-date`
@@ -71,6 +79,10 @@ Last updated: 2026-11-20
 - Silver and Gold snapshots from `2026-10-28` through `2026-11-15` were
   rebuilt. The `2026-10-21` Bronze vacancy snapshot and its five Silver outputs
   were removed because no matching Bronze codelists were archived.
+- Committed notebook outputs were cleared and Jupyter checkpoint directories
+  are ignored so the current tree does not expose vacancy contact PII. The old
+  notebook outputs remain in existing Git history and must be purged before
+  this repository is published.
 
 ## Accepted decisions
 
@@ -142,6 +154,20 @@ export. Bronze, Silver, and Gold implementations live under the common
 `local/pipeline/` namespace, while their runnable build entrypoints remain at
 the root of `local/`.
 
+### Publish local snapshots as one completed unit
+
+Silver and Gold validate every table and export every Parquet file to a
+same-filesystem staging root before replacing final files. Publication writes
+an `_INCOMPLETE` marker before the first replacement and exposes `_SUCCESS`
+only after every table is in place. Local consumers reject incomplete
+snapshots, while legacy snapshots created before markers remain readable.
+
+Because `fact_vacancy_event` depends on two adjacent fact snapshots, rebuilding
+a historical Gold snapshot also rebuilds the event partition for the closest
+later snapshot after the historical publication succeeds. A failed historical
+publication is confined to the snapshot being rebuilt and does not invalidate
+later snapshots.
+
 ### Keep nationwide vacancies outside regional bridges
 
 The Gold `bridge_vacancy_region` table contains only explicit or inferable regional
@@ -205,6 +231,29 @@ Add focused tests for other required Gold fact dimension references when their
 validation logic changes. Do not deploy the incomplete Lambda transform yet.
 
 ## Changes
+
+### 2026-11-21: Make local snapshot publication failure-safe
+
+Changed Silver and Gold to validate all models before export, stage all output
+away from final partitions, and publish with snapshot completion markers.
+Gold now refuses incomplete Silver/Gold inputs and refreshes the closest later
+event partition after a targeted historical rebuild. Added regression tests for
+failed Silver reruns, completion markers, and dependent event recalculation.
+Cleared PII-bearing notebook outputs, removed the tracked checkpoint, and
+ignored future Jupyter checkpoints. Existing Git history still requires a
+separate purge before publication.
+
+### 2026-11-21: Keep failed historical Gold rebuilds isolated
+
+Removed failure propagation that marked the closest later Gold snapshot as
+incomplete when publication of a historical snapshot failed. The failed
+snapshot still remains incomplete and the build still raises; later event
+partitions are refreshed only after the historical publication succeeds.
+
+### 2026-11-20: Test Bronze schema-drift rejection end to end
+
+Added an E2E failure-path test proving that a Bronze snapshot missing the
+required `zamestnavatel` column is rejected before any Silver table is exported.
 
 ### 2026-11-20: Add a local Bronze-to-Gold end-to-end test
 
