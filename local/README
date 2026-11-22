@@ -1,2 +1,4 @@
-The goal of this folder is to have a playground for the development.
-This is/will be fully working local pipeline, serving as a base for the final version.
+# Local pipeline
+
+This is the only working implementation: Bronze → Silver → Gold with DuckDB
+and Parquet. Run it using the commands in the [main README](../README.md).

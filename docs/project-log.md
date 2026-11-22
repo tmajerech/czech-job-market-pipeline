@@ -4,7 +4,7 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-11-21
+Last updated: 2026-11-22
 
 ## Current state
 
@@ -12,17 +12,15 @@ Last updated: 2026-11-21
   feeds, codelists, and unemployment datasets. Detailed evidence is in
   `docs/data-sources.md`, `docs/data-profile.md`,
   `docs/incremental-behaviour.md`, and `docs/data-model-notes.md`.
-- The committed CDK stack defines one S3 data bucket, a snapshot download
-  Lambda, a Step Functions workflow, and an EventBridge Scheduler trigger at
-  05:00 Europe/Prague.
+- The current portfolio implementation is local only. `infra/` contains an
+  experimental CDK Raw downloader, not a complete or deployment-ready AWS
+  pipeline.
 - The download Lambda stores the unchanged source file at
   `raw/mpsv/volna-mista/snapshot_date=YYYY-MM-DD/volna-mista.json.gz`. A repeat
   invocation returns `already_exists` when that object is present.
-- Work in progress adds `TransformSnapshot` after `DownloadSnapshot`. It is
-  currently uncommitted and incomplete.
-- The transform directory contains raw-key enums, a sample vacancy row,
-  download-output event samples, `pyarrow`, an initial Silver schema, and a
-  first `transform_vacancy` mapper.
+- The former incomplete AWS `TransformSnapshot` Lambda has been removed from
+  the workflow and repository. AWS currently stops after the Raw download and
+  does not claim to publish Silver data.
 - The local playground has one dependency-free Bronze entrypoint that downloads
   the daily MPSV vacancy snapshot and all 22 referenced codelists into the same
   date partition. Every file is streamed through an atomic rename and a repeat
@@ -93,36 +91,26 @@ The official increment feeds contain duplicate and ambiguous events, so V1
 stores and processes the complete daily snapshot. Changes such as `NEW`,
 `REMOVED`, and `CHANGED` will later be derived by comparing snapshots.
 
-### Use one S3 bucket with layer prefixes
+### Present the working local pipeline as the portfolio project
 
-V1 uses one data bucket rather than separate Raw and Silver buckets:
+The repository demonstrates the local Bronze → Silver → Gold pipeline. AWS is
+explicitly outside the current working scope; its remaining Raw-download CDK
+code is an unfinished experiment and must not be presented as implemented or
+deployment-ready.
+
+### Keep the experimental AWS layout in one bucket
+
+The accepted design for any future AWS continuation uses one data bucket rather
+than separate Raw and Silver buckets:
 
 ```text
 raw/mpsv/volna-mista/snapshot_date=YYYY-MM-DD/volna-mista.json.gz
 silver/mpsv/vacancies/snapshot_date=YYYY-MM-DD/part-00000.parquet
 ```
 
-The Raw layer preserves the source's Czech naming and payload. Silver uses
-standardized English dataset and column names.
-
-### Keep the first transformation simple
-
-The planned V1 transform is `gzip + json.load -> ordinary Python mapping ->
-PyArrow Table -> Parquet`. Pandas and streaming JSON parsing are unnecessary
-until measured memory usage proves otherwise. The first version writes one
-`part-00000.parquet` file per table and snapshot.
-
-### Validate before publishing Silver
-
-Within one full snapshot, `portalId` must be present and unique. A duplicate is
-a data-quality failure, not a row to silently discard. Parquet is written to
-Lambda's local `/tmp` storage and uploaded to the final Silver key only after
-validation succeeds.
-
-### Use explicit PyArrow schemas
-
-Silver Parquet files use explicit schemas so column types stay stable across
-daily snapshots, including days where a nullable column contains only nulls.
+The existing experiment implements only the Raw prefix. The Silver prefix is a
+design decision, not a working AWS layer. Raw preserves the source's Czech
+naming and payload; a future Silver layer would use standardized English names.
 
 ### Prototype Silver locally with DuckDB
 
@@ -218,20 +206,8 @@ One Bronze run calculates the snapshot date once and passes it to every source.
 The MPSV endpoints expose only their current state, so the Bronze entrypoint
 does not accept a historical snapshot date or claim to support backfills.
 
-## Known transform issues
+## Known data issues
 
-`infra/handlers/transform_snapshot/index.py` is a work in progress and should
-not be deployed yet. Known issues include:
-
-- gzip/S3 reading mode still needs correction;
-- snapshot date should be derived from the input object key rather than wall
-  clock time;
-- the output should check idempotency and return structured metadata;
-- final data-quality checks and tests are missing;
-- the Lambda currently has 512 MB memory even though the selected
-  `json.load` approach is expected to start around 2 GB;
-- `pandas` remains in the transform requirements even though the current
-  decision is to use only PyArrow.
 - Silver vacancy partitions from `2026-10-21` and `2026-10-28` still expose the
   superseded `profession_cz_isco_id` name. Rebuild them before querying all
   vacancy partitions together; current outputs use `occupation_id`.
@@ -239,9 +215,25 @@ not be deployed yet. Known issues include:
 ## Next step
 
 Add focused tests for other required Gold fact dimension references when their
-validation logic changes. Do not deploy the incomplete Lambda transform yet.
+validation logic changes. If AWS Silver processing is resumed, design and test
+it as a fresh implementation before adding it to the state machine.
 
 ## Changes
+
+### 2026-11-22: Clarify the portfolio scope
+
+Replaced the generated and discovery-heavy README text with a short portfolio
+overview, local run commands, and an explicit warning that AWS is not
+implemented. Added the same scope statement to the local and infra READMEs so
+the repository does not imply a production-ready cloud pipeline.
+
+### 2026-11-22: Remove the incomplete AWS transform
+
+Removed the nonfunctional `TransformSnapshot` Lambda handler, its dependencies,
+CDK resource, bucket grant, and Step Functions task. The scheduled AWS workflow
+now ends after the working Raw snapshot download instead of failing in an
+unfinished Silver transform. Added a synthesis assertion that the stack has one
+application Lambda and no `TransformSnapshot` resource.
 
 ### 2026-11-21: Document recovery and purge notebook PII history
 

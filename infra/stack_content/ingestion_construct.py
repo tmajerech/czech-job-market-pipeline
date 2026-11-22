@@ -22,17 +22,10 @@ class IngestionConstruct(Construct):
             payload_response_only=True,
         )
 
-        transform_snapshot = tasks.LambdaInvoke(
-            self,
-            "TransformSnapshot",
-            lambda_function=lambdas.transform_snapshot,  # type: ignore
-            payload_response_only=True,
-        )
-
         self.download_state_machine = stepfunctions.StateMachine(
             self,
             "DownloadStateMachine",
             definition_body=stepfunctions.DefinitionBody.from_chainable(
-                download_snapshot.next(transform_snapshot)
+                download_snapshot
             ),
         )
