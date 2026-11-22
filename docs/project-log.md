@@ -4,14 +4,16 @@ This is the short continuity log for the Jobs project. Read it at the start of
 each work session. Update it after meaningful implementation changes or
 architectural decisions, including the reason behind them.
 
-Last updated: 2026-11-22
+Last updated: 2026-11-23
 
 ## Current state
 
 - The discovery phase measured the official MPSV vacancy snapshot, increment
   feeds, codelists, and unemployment datasets. Detailed evidence is in
   `docs/data-sources.md`, `docs/data-profile.md`,
-  `docs/incremental-behaviour.md`, and `docs/data-model-notes.md`.
+  `docs/incremental-behaviour.md`, and `docs/initial-assessment.md`. The
+  implemented Bronze, Silver, and Gold contracts are documented separately in
+  `docs/data-model.md`.
 - The portfolio implementation is a local Bronze → Silver → Gold pipeline. The
   former experimental AWS infrastructure has been removed from the public
   project until there is a complete, tested cloud implementation.
@@ -201,6 +203,15 @@ Keep CI green as the pipeline evolves. The next portfolio enhancement should be
 a compact example of analytical output, not additional platform scope.
 
 ## Changes
+
+### 2026-11-23: Document the implemented data model
+
+Replaced the discovery-era modelling notes with `docs/data-model.md`, an
+implementation contract for the current local pipeline. It now lists every
+published Silver and Gold table with its grain, documents region and event
+derivations, PII boundaries, validation and publication rules, supported
+analytics, and explicit V1 limits. The portfolio README links this current
+model instead of speculative increment, unemployment, and SCD proposals.
 
 ### 2026-11-22: Polish the public portfolio repository
 

@@ -28,6 +28,6 @@ python3 -m venv .venv
 .venv/bin/python -m pytest
 ```
 
-See the [data model](docs/data-model-notes.md) and
+See the [implemented data model](docs/data-model.md) and
 [failure-recovery runbook](docs/local-pipeline-operations.md). Downloaded source
 snapshots are ignored by Git because they can contain personal contact data.
