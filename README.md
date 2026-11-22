@@ -1,12 +1,22 @@
 # Czech Job Market Data Pipeline
 
-Portfolio data-engineering project built with official Czech MPSV job-market
-data.
+[![CI](https://github.com/tmajerech/czech-job-market-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/tmajerech/czech-job-market-pipeline/actions/workflows/ci.yml)
 
-**Current scope is local only.** The working pipeline builds validated
-Bronze → Silver → Gold datasets with Python, DuckDB, and Parquet. The AWS
-pipeline is not implemented; `infra/` is an unfinished experiment and should
-not be deployed.
+Portfolio data-engineering pipeline built from official Czech MPSV job-market
+data with Python, DuckDB, and Parquet. It runs locally; no AWS deployment is
+required or included.
+
+```mermaid
+flowchart LR
+    A[MPSV APIs] --> B[Bronze<br/>Raw JSON + codelists]
+    B --> C[Silver<br/>Typed and validated Parquet]
+    C --> D[Gold<br/>Star schema + vacancy events]
+    D --> E[Analytics SQL]
+```
+
+- Bronze preserves daily source snapshots and all referenced codelists.
+- Silver enforces schemas, grains, and references before atomic publication.
+- Gold publishes dimensions, facts, bridges, and `NEW`/`REMOVED` events.
 
 ```bash
 cd local
@@ -18,6 +28,6 @@ python3 -m venv .venv
 .venv/bin/python -m pytest
 ```
 
-See [project status](docs/project-log.md) and
-[local recovery notes](docs/local-pipeline-operations.md). Raw source data is
-ignored by Git because it can contain personal contact information.
+See the [data model](docs/data-model-notes.md) and
+[failure-recovery runbook](docs/local-pipeline-operations.md). Downloaded source
+snapshots are ignored by Git because they can contain personal contact data.

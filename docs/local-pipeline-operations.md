@@ -1,8 +1,8 @@
 # Local pipeline operations
 
 This runbook describes the failure and recovery contract for the local
-Bronze, Silver, and Gold pipeline. It does not apply to the unfinished AWS
-transform.
+Bronze, Silver, and Gold pipeline. The repository does not currently include
+an AWS runtime.
 
 ## Run one daily snapshot
 

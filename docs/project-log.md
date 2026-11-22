@@ -12,20 +12,14 @@ Last updated: 2026-11-22
   feeds, codelists, and unemployment datasets. Detailed evidence is in
   `docs/data-sources.md`, `docs/data-profile.md`,
   `docs/incremental-behaviour.md`, and `docs/data-model-notes.md`.
-- The current portfolio implementation is local only. `infra/` contains an
-  experimental CDK Raw downloader, not a complete or deployment-ready AWS
-  pipeline.
-- The download Lambda stores the unchanged source file at
-  `raw/mpsv/volna-mista/snapshot_date=YYYY-MM-DD/volna-mista.json.gz`. A repeat
-  invocation returns `already_exists` when that object is present.
-- The former incomplete AWS `TransformSnapshot` Lambda has been removed from
-  the workflow and repository. AWS currently stops after the Raw download and
-  does not claim to publish Silver data.
-- The local playground has one dependency-free Bronze entrypoint that downloads
+- The portfolio implementation is a local Bronze → Silver → Gold pipeline. The
+  former experimental AWS infrastructure has been removed from the public
+  project until there is a complete, tested cloud implementation.
+- The local pipeline has one dependency-free Bronze entrypoint that downloads
   the daily MPSV vacancy snapshot and all 22 referenced codelists into the same
   date partition. Every file is streamed through an atomic rename and a repeat
   run reuses existing non-empty files.
-- The local Silver prototype loads one Bronze snapshot into DuckDB once and
+- The local Silver layer loads one Bronze snapshot into DuckDB once and
   builds explicit temporary tables for vacancies, workplaces, benefits,
   required skills, required languages, contacts, and reference tables for
   CZ-ISCO occupations, regions, districts, municipalities, salary types, and
@@ -34,7 +28,7 @@ Last updated: 2026-11-22
   grain validation, and atomic Parquet export through `BaseTable`. Personal
   vacancy contacts are validated but omitted from public output. Published
   tables have explicit output type contracts.
-- The local Gold prototype can load every published Silver table for one
+- The local Gold layer can load every published Silver table for one
   selected snapshot into consistently named DuckDB temporary tables prefixed
   with `stage_`. Its first model publishes a deduplicated `bridge_vacancy_region`
   bridge at the grain `(snapshot_date, portal_id, region_id)`. The daily
@@ -80,8 +74,9 @@ Last updated: 2026-11-22
   rebuilt. The `2026-10-21` Bronze vacancy snapshot and its five Silver outputs
   were removed because no matching Bronze codelists were archived.
 - Jupyter checkpoint directories are ignored. Git history was rewritten to
-  remove every historical `Untitled.ipynb` and checkpoint version that carried
-  vacancy contact PII; only the current output-free notebook was added back.
+  remove historical notebook versions that carried vacancy contact PII. The
+  output-free source exploration now lives at
+  `notebooks/source_data_exploration.ipynb`.
 
 ## Accepted decisions
 
@@ -94,23 +89,9 @@ stores and processes the complete daily snapshot. Changes such as `NEW`,
 ### Present the working local pipeline as the portfolio project
 
 The repository demonstrates the local Bronze → Silver → Gold pipeline. AWS is
-explicitly outside the current working scope; its remaining Raw-download CDK
-code is an unfinished experiment and must not be presented as implemented or
-deployment-ready.
-
-### Keep the experimental AWS layout in one bucket
-
-The accepted design for any future AWS continuation uses one data bucket rather
-than separate Raw and Silver buckets:
-
-```text
-raw/mpsv/volna-mista/snapshot_date=YYYY-MM-DD/volna-mista.json.gz
-silver/mpsv/vacancies/snapshot_date=YYYY-MM-DD/part-00000.parquet
-```
-
-The existing experiment implements only the Raw prefix. The Silver prefix is a
-design decision, not a working AWS layer. Raw preserves the source's Czech
-naming and payload; a future Silver layer would use standardized English names.
+explicitly outside the current working scope. Incomplete cloud experiments do
+not belong on the public portfolio branch; add AWS again only as a complete,
+tested implementation.
 
 ### Prototype Silver locally with DuckDB
 
@@ -199,7 +180,7 @@ a mart later when it demonstrates that lifecycle honestly.
 
 ### Use one entrypoint per local data layer
 
-The local pipeline exposes `build_bronze.py`, `build_silver.py`, and eventually
+The local pipeline exposes `build_bronze.py`, `build_silver.py`, and
 `build_gold.py` as the runnable layer entrypoints. Source-specific downloaders
 and table-specific transforms remain separate modules called by those scripts.
 One Bronze run calculates the snapshot date once and passes it to every source.
@@ -214,11 +195,19 @@ does not accept a historical snapshot date or claim to support backfills.
 
 ## Next step
 
-Add focused tests for other required Gold fact dimension references when their
-validation logic changes. If AWS Silver processing is resumed, design and test
-it as a fresh implementation before adding it to the state machine.
+Verify the public GitHub Actions run and keep the portfolio README focused on
+working behavior and analytical value.
 
 ## Changes
+
+### 2026-11-22: Polish the public portfolio repository
+
+Added GitHub Actions for the local test suite and a compact README architecture
+diagram, moved the sanitized exploration notebook to a descriptive path, and
+removed the incomplete AWS experiment from the public project. The README now
+links durable design and recovery documentation instead of the internal change
+log. GitHub description and data-engineering topics identify the project for
+recruiters and repository search.
 
 ### 2026-11-22: Clarify the portfolio scope
 
