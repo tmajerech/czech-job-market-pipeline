@@ -67,6 +67,8 @@ Last updated: 2026-11-22
   column, failed rebuilds preserve the previous published snapshot, and
   targeted Gold rebuilds refresh dependent vacancy events; run all tests with
   `cd local && .venv/bin/python -m pytest`.
+- GitHub Actions runs the same 20-test suite on pushes to `main` and pull
+  requests. The first public CI run passed on Python 3.14.
 - Historical local Silver and Gold outputs can be rebuilt with
   `local/rebuild_all.py`; individual layer builders accept `--snapshot-date`
   for targeted reruns.
@@ -195,8 +197,8 @@ does not accept a historical snapshot date or claim to support backfills.
 
 ## Next step
 
-Verify the public GitHub Actions run and keep the portfolio README focused on
-working behavior and analytical value.
+Keep CI green as the pipeline evolves. The next portfolio enhancement should be
+a compact example of analytical output, not additional platform scope.
 
 ## Changes
 
@@ -207,7 +209,8 @@ diagram, moved the sanitized exploration notebook to a descriptive path, and
 removed the incomplete AWS experiment from the public project. The README now
 links durable design and recovery documentation instead of the internal change
 log. GitHub description and data-engineering topics identify the project for
-recruiters and repository search.
+recruiters and repository search. The first public CI run passed all 20 tests
+on Python 3.14.
 
 ### 2026-11-22: Clarify the portfolio scope
 
