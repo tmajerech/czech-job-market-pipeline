@@ -20,7 +20,7 @@ except ImportError:  # pragma: no cover - the script remains useful without it
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "data" / "raw"
+RAW = ROOT / "analysis" / "raw"
 ANALYSIS = ROOT / "analysis"
 FULL = RAW / "vacancies" / "full" / "volna-mista-retrieved-2026-10-03.json.gz"
 INCREMENTS = sorted((RAW / "vacancies" / "increments").glob("*.json.gz"))
@@ -797,14 +797,14 @@ def source_url(relative: Path) -> str | None:
     text = relative.as_posix()
     base = "https://data.mpsv.cz"
     name = relative.name
-    if text.startswith("data/raw/vacancies/full/"):
+    if text.startswith("analysis/raw/vacancies/full/"):
         return f"{base}/od/soubory/volna-mista/volna-mista.json.gz"
-    if text.startswith("data/raw/vacancies/increments/"):
+    if text.startswith("analysis/raw/vacancies/increments/"):
         return f"{base}/od/soubory/volna-mista-prirustek/{name}"
-    if text.startswith("data/raw/vacancies/schema/"):
+    if text.startswith("analysis/raw/vacancies/schema/"):
         directory = "volna-mista-prirustek" if "prirustek" in name else "volna-mista"
         return f"{base}/od/soubory/{directory}/{name}"
-    if text.startswith("data/raw/codelists/"):
+    if text.startswith("analysis/raw/codelists/"):
         return f"{base}/od/soubory/ciselniky/{name}"
     if name.startswith("podil-nezamestnanych-osob-adresa-retrieved"):
         return f"{base}/portal/api/reports/by-table/evid_pno_adresa_agr_frz_odata/data/json?unbounded=true"

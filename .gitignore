@@ -1,13 +1,7 @@
-# Mutable/downloaded source payloads. Keep schemas, codelists, and the manifest.
-data/raw/vacancies/full/
-data/raw/vacancies/increments/
-data/raw/unemployment/*retrieved*.json
-data/raw/unemployment/*.json.gz
-
 # Interrupted downloads.
 *.part
 
-# Local exploratory notebooks and generated profiling outputs.
+# Local discovery downloads and generated profiling outputs.
 analysis/
 
 # Local Python artifacts.

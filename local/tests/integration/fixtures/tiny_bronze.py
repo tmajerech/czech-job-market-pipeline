@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
-VACANCY_SAMPLE = PROJECT_ROOT / "data/samples/vacancy_snapshot_row.json"
+VACANCY_SAMPLE = PROJECT_ROOT / "notebooks/samples/vacancy_snapshot_row.json"
 
 CODELISTS = {
     "cz-isco.json.gz": [

@@ -23,15 +23,15 @@ download() {
 }
 
 download "$BASE/od/soubory/volna-mista/volna-mista.json.gz" \
-  "$ROOT_DIR/data/raw/vacancies/full/volna-mista-retrieved-$RETRIEVAL_DATE.json.gz"
+  "$ROOT_DIR/analysis/raw/vacancies/full/volna-mista-retrieved-$RETRIEVAL_DATE.json.gz"
 download "$BASE/od/soubory/volna-mista/volna-mista.schema.json" \
-  "$ROOT_DIR/data/raw/vacancies/schema/volna-mista.schema.json"
+  "$ROOT_DIR/analysis/raw/vacancies/schema/volna-mista.schema.json"
 download "$BASE/od/soubory/volna-mista/volna-mista-metadata.jsonld" \
-  "$ROOT_DIR/data/raw/vacancies/schema/volna-mista-metadata.jsonld"
+  "$ROOT_DIR/analysis/raw/vacancies/schema/volna-mista-metadata.jsonld"
 download "$BASE/od/soubory/volna-mista-prirustek/volna-mista-prirustek.schema.json" \
-  "$ROOT_DIR/data/raw/vacancies/schema/volna-mista-prirustek.schema.json"
+  "$ROOT_DIR/analysis/raw/vacancies/schema/volna-mista-prirustek.schema.json"
 download "$BASE/od/soubory/volna-mista-prirustek/volna-mista-prirustek-metadata.jsonld" \
-  "$ROOT_DIR/data/raw/vacancies/schema/volna-mista-prirustek-metadata.jsonld"
+  "$ROOT_DIR/analysis/raw/vacancies/schema/volna-mista-prirustek-metadata.jsonld"
 
 increment_dates=(
   2026-09-22 2026-09-23 2026-09-24 2026-09-25 2026-09-26
@@ -40,7 +40,7 @@ increment_dates=(
 for date in "${increment_dates[@]}"; do
   name="volna-mista-prirustek-$date.json.gz"
   download "$BASE/od/soubory/volna-mista-prirustek/$name" \
-    "$ROOT_DIR/data/raw/vacancies/increments/$name"
+    "$ROOT_DIR/analysis/raw/vacancies/increments/$name"
 done
 
 codelists=(
@@ -53,20 +53,20 @@ codelists=(
 )
 for name in "${codelists[@]}"; do
   download "$BASE/od/soubory/ciselniky/$name.json.gz" \
-    "$ROOT_DIR/data/raw/codelists/$name.json.gz"
+    "$ROOT_DIR/analysis/raw/codelists/$name.json.gz"
   download "$BASE/od/soubory/ciselniky/$name.schema.json" \
-    "$ROOT_DIR/data/raw/codelists/$name.schema.json"
+    "$ROOT_DIR/analysis/raw/codelists/$name.schema.json"
 done
 download "$BASE/od/soubory/ciselniky/cz-isco-metadata.jsonld" \
-  "$ROOT_DIR/data/raw/codelists/cz-isco-metadata.jsonld"
+  "$ROOT_DIR/analysis/raw/codelists/cz-isco-metadata.jsonld"
 
 download "$BASE/portal/api/reports/by-table/evid_pno_adresa_agr_frz_odata/data/json?unbounded=true" \
-  "$ROOT_DIR/data/raw/unemployment/podil-nezamestnanych-osob-adresa-retrieved-$RETRIEVAL_DATE.json"
+  "$ROOT_DIR/analysis/raw/unemployment/podil-nezamestnanych-osob-adresa-retrieved-$RETRIEVAL_DATE.json"
 download "$BASE/portal/api/reports/by-table/evid_pno_adresa_agr_frz_odata/schema/json?title=podil_nezamestnanych_osob_trvala_kontaktni_adresa_metadata" \
-  "$ROOT_DIR/data/raw/unemployment/podil-nezamestnanych-osob-adresa.schema.json"
+  "$ROOT_DIR/analysis/raw/unemployment/podil-nezamestnanych-osob-adresa.schema.json"
 download "$BASE/od/soubory/uchazeci-a-volna-mista/uchazeci-a-volna-mista-12-2024.json.gz" \
-  "$ROOT_DIR/data/raw/unemployment/uchazeci-a-volna-mista-12-2024.json.gz"
+  "$ROOT_DIR/analysis/raw/unemployment/uchazeci-a-volna-mista-12-2024.json.gz"
 download "$BASE/od/soubory/uchazeci-a-volna-mista/uchazeci-a-volna-mista.schema.json" \
-  "$ROOT_DIR/data/raw/unemployment/uchazeci-a-volna-mista.schema.json"
+  "$ROOT_DIR/analysis/raw/unemployment/uchazeci-a-volna-mista.schema.json"
 
 printf 'Done. Generate hashes and measurements with scripts/profile_data.py.\n'

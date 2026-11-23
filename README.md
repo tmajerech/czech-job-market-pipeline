@@ -15,19 +15,19 @@ flowchart LR
 ```
 
 - Bronze preserves daily source snapshots and all referenced codelists.
-- Silver enforces schemas, grains, and references before atomic publication.
+- Silver validates schemas, grains, and references before publishing Parquet.
 - Gold publishes dimensions, facts, bridges, and `NEW`/`REMOVED` events.
 
 ```bash
 cd local
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python build_bronze.py
-.venv/bin/python build_silver.py
+.venv/bin/python build_bronze.py &&
+.venv/bin/python build_silver.py &&
 .venv/bin/python build_gold.py
 .venv/bin/python -m pytest
 ```
 
 See the [implemented data model](docs/data-model.md) and
-[failure-recovery runbook](docs/local-pipeline-operations.md). Downloaded source
+[local pipeline operations](docs/local-pipeline-operations.md). Downloaded source
 snapshots are ignored by Git because they can contain personal contact data.

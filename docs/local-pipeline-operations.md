@@ -1,82 +1,67 @@
 # Local pipeline operations
 
-This runbook describes the failure and recovery contract for the local
-Bronze, Silver, and Gold pipeline. The repository does not currently include
-an AWS runtime.
-
-## Run one daily snapshot
-
-Run the layers sequentially from `local/`:
+Install dependencies using the [README](../README.md). Run from `local/`:
 
 ```bash
-.venv/bin/python build_bronze.py
-.venv/bin/python build_silver.py --snapshot-date YYYY-MM-DD
-.venv/bin/python build_gold.py --snapshot-date YYYY-MM-DD
+.venv/bin/python build_bronze.py &&
+.venv/bin/python build_silver.py &&
+.venv/bin/python build_gold.py
 ```
 
-Stop after the first non-zero exit code. Do not start the next layer after a
-failure.
+The sequence stops on an error. Bronze uses today's Prague date; Silver and
+Gold default to the latest input date. Run one build process at a time and
+wait for completion before querying outputs. There is no process lock.
 
-## Single-writer requirement
+## Publication
 
-The local demo has no process lock. Run only one local build process at a time.
-In particular, never run two publishers for the same layer and snapshot date,
-and never overlap an upstream rebuild with its downstream reader. Concurrent
-runs could interleave file replacements, completion markers, and reads.
+Silver and Gold validate and export tables to temporary storage before
+replacing final Parquet files. Each file replacement is atomic; the whole
+snapshot is not.
 
-Add a real lock for `(layer, snapshot_date)` plus dependency-aware orchestration
-before scheduling builds, running them in CI, or allowing multiple operators
-to use the same local publication root.
+Status files live under `<layer_root>/_snapshots/snapshot_date=YYYY-MM-DD/`:
 
-## Snapshot markers
+- `_INCOMPLETE` blocks a snapshot during publication or event refresh and
+  remains after failure. Gold rejects marked Silver inputs and skips marked
+  Gold snapshots when choosing event predecessors.
+- `_SUCCESS` records a publication and may be left over from an older attempt.
+  It never overrides `_INCOMPLETE`.
 
-Silver and Gold stage and validate every table before changing final files.
-Publication then uses these markers:
-
-- `_INCOMPLETE` means publication started but did not finish. In-repository
-  readers reject the snapshot.
-- `_SUCCESS` means every table in that publication attempt was replaced.
-- `_INCOMPLETE` takes precedence if both markers exist after an interruption.
-- Snapshots created before markers were introduced remain readable for
-  backward compatibility.
-
-Direct Parquet readers can bypass this contract, so operational queries should
-not read a snapshot carrying `_INCOMPLETE`.
+Success writes `_SUCCESS` and removes `_INCOMPLETE`. Readers allow legacy
+snapshots without markers. Example analytics SQL reads Parquet without marker
+checks: only query successfully built dates without `_INCOMPLETE`.
 
 ## Recovery
 
-### Bronze failure
+Fix the reported error and stop downstream builds until recovery succeeds.
+Never remove markers manually.
 
-Each download is written through a `.part` file and renamed only when complete.
-Bronze does not have a whole-snapshot completion marker, so a failed run can
-leave some completed source files and omit later ones. Rerun `build_bronze.py`;
-it reuses completed non-empty files and downloads the missing files. Start
-Silver only after Bronze exits successfully.
+**Bronze:** rerun on the same Prague day to reuse non-empty downloads and fetch
+missing ones. Reuse checks size, not content validity. A retry on another day
+creates a new partition; it cannot complete a past snapshot from current data.
 
-### Silver or Gold failure before publication
-
-Validation or staging failures do not change final files. Fix the input or
-code problem and rerun the same layer and snapshot date. A previously
-successful snapshot remains readable.
-
-### Silver or Gold failure during publication
-
-The affected snapshot retains `_INCOMPLETE`, and the build exits non-zero.
-Rerun the same layer and snapshot date. A successful rerun replaces every
-published file, writes `_SUCCESS`, and removes `_INCOMPLETE`.
-
-### Historical Gold rebuild
-
-Rebuilding Gold date `D` also refreshes `fact_vacancy_event` for the closest
-later Gold fact snapshot `D_next` after `D` publishes successfully.
-
-- If publication of `D` fails, only `D` is incomplete. Rerun `D`.
-- If `D` succeeds but the automatic event refresh fails, `D_next` is
-  incomplete. Rerun Gold directly for `D_next`; rerunning only `D` is not the
-  recovery command.
-
-For example, if `D_next` is `2026-11-21`:
+**Silver or Gold:** failure before normal publication leaves final files
+unchanged. Failure during publication may leave mixed files and `_INCOMPLETE`.
+Rerun the failed layer with the affected date:
 
 ```bash
-.venv/bin/python build_gold.py --snapshot-date 2026-11-21
+.venv/bin/python build_silver.py --snapshot-date YYYY-MM-DD
+# After Silver succeeds, rebuild Gold for that date:
+.venv/bin/python build_gold.py --snapshot-date YYYY-MM-DD
 ```
+
+For a Gold-only failure, run only Gold. Silver does not automatically refresh
+existing Gold outputs.
+
+**Historical Gold:** publishing date D also triggers an event refresh for the
+closest later unmarked fact snapshot. These are separate publications:
+
+- If D fails, rerun D.
+- If the later event refresh fails, rerun Gold directly for that later date.
+  Rerunning D skips a later date marked incomplete.
+- If execution stops between publishing D and marking the later date, its
+  events may be stale without a marker. Rebuild the next stored fact date
+  explicitly before querying events.
+
+Repair affected dates chronologically. Confirm successful exits and no
+`_INCOMPLETE` on affected dates. To rebuild all archived dates, run
+`.venv/bin/python rebuild_all.py`; each Bronze date needs its matching codelists.
