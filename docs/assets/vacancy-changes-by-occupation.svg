@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="726" viewBox="0 0 1200 726" role="img" aria-labelledby="title desc">
+<title id="title">Vacancy listing turnover by occupation</title>
+<desc id="desc">New and removed vacancy listings between the two latest completed Gold snapshots.</desc>
+<rect width="1200" height="100%" rx="18" fill="#f8fafc"/>
+<text x="48" y="54" font-family="Arial" font-size="26" font-weight="700" fill="#0f172a">Vacancy listing turnover by occupation</text>
+<text x="48" y="84" font-family="Arial" font-size="16" fill="#475569">2026-11-15 → 2026-11-21 · top 10 by NEW + REMOVED events</text>
+<rect x="48" y="112" width="14" height="14" rx="3" fill="#ef6a67"/>
+<text x="70" y="124" font-family="Arial" font-size="14" fill="#334155">REMOVED</text>
+<rect x="176" y="112" width="14" height="14" rx="3" fill="#16a67a"/>
+<text x="198" y="124" font-family="Arial" font-size="14" fill="#334155">NEW</text>
+<line x1="755" y1="142" x2="755" y2="672" stroke="#94a3b8" stroke-width="1"/>
+<text x="48" y="181" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Dělníci v oblasti výstavby a údržby budov</text>
+<text x="48" y="199" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 93130</text>
+<rect x="493" y="169" width="262" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="169" width="330" height="26" rx="4" fill="#16a67a"/>
+<text x="484" y="188" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">46</text>
+<text x="1094" y="188" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">58</text>
+<text x="48" y="229" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Kuchaři (kromě šéfkuchařů)</text>
+<text x="48" y="247" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 51201</text>
+<rect x="567" y="217" width="188" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="217" width="233" height="26" rx="4" fill="#16a67a"/>
+<text x="558" y="236" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">33</text>
+<text x="997" y="236" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">41</text>
+<text x="48" y="277" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Pomocní kuchaři</text>
+<text x="48" y="295" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 51203</text>
+<rect x="590" y="265" width="165" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="265" width="245" height="26" rx="4" fill="#16a67a"/>
+<text x="581" y="284" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">29</text>
+<text x="1009" y="284" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">43</text>
+<text x="48" y="325" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Skladníci, obsluha manipulačních vozíků</text>
+<text x="48" y="343" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 83443</text>
+<rect x="579" y="313" width="176" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="313" width="199" height="26" rx="4" fill="#16a67a"/>
+<text x="570" y="332" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">31</text>
+<text x="963" y="332" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">35</text>
+<text x="48" y="373" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Číšníci a servírky</text>
+<text x="48" y="391" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 51310</text>
+<rect x="601" y="361" width="154" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="361" width="148" height="26" rx="4" fill="#16a67a"/>
+<text x="592" y="380" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">27</text>
+<text x="912" y="380" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">26</text>
+<text x="48" y="421" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Uklízeči a pomocníci v administrativních objektech</text>
+<text x="48" y="439" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 91121</text>
+<rect x="618" y="409" width="137" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="409" width="142" height="26" rx="4" fill="#16a67a"/>
+<text x="609" y="428" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">24</text>
+<text x="906" y="428" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">25</text>
+<text x="48" y="469" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Všeobecní administrativní pracovníci</text>
+<text x="48" y="487" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 41100</text>
+<rect x="653" y="457" width="102" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="457" width="159" height="26" rx="4" fill="#16a67a"/>
+<text x="644" y="476" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">18</text>
+<text x="923" y="476" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">28</text>
+<text x="48" y="517" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Ostatní uklízeči a pomocníci</text>
+<text x="48" y="535" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 91129</text>
+<rect x="624" y="505" width="131" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="505" width="108" height="26" rx="4" fill="#16a67a"/>
+<text x="615" y="524" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">23</text>
+<text x="872" y="524" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">19</text>
+<text x="48" y="565" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Uklízeči a pomocníci v ubytovacích a vzdělávacích…</text>
+<text x="48" y="583" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 91123</text>
+<rect x="607" y="553" width="148" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="553" width="63" height="26" rx="4" fill="#16a67a"/>
+<text x="598" y="572" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">26</text>
+<text x="827" y="572" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">11</text>
+<text x="48" y="613" font-family="Arial" font-size="15" font-weight="600" fill="#0f172a">Prodavači smíšeného zboží</text>
+<text x="48" y="631" font-family="Menlo" font-size="12" fill="#64748b">CZ-ISCO 52231</text>
+<rect x="647" y="601" width="108" height="26" rx="4" fill="#ef6a67"/>
+<rect x="755" y="601" width="97" height="26" rx="4" fill="#16a67a"/>
+<text x="638" y="620" text-anchor="end" font-family="Arial" font-size="13" font-weight="700" fill="#9f3537">19</text>
+<text x="861" y="620" font-family="Arial" font-size="13" font-weight="700" fill="#08775a">17</text>
+<text x="48" y="700" font-family="Arial" font-size="12" fill="#64748b">Source: Czech MPSV · aggregated from Gold Parquet tables with DuckDB</text>
+</svg>

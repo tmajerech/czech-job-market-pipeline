@@ -18,6 +18,17 @@ flowchart LR
 - Silver validates schemas, grains, and references before publishing Parquet.
 - Gold publishes dimensions, facts, bridges, and `NEW`/`REMOVED` events.
 
+## What the data shows
+
+This committed example uses the latest completed Gold interval available when
+it was generated. It ranks occupations by listing turnover (`NEW` + `REMOVED`).
+Counts represent listings (`portal_id`), not advertised positions; only
+aggregates are committed.
+
+![New and removed vacancies by occupation](docs/assets/vacancy-changes-by-occupation.svg)
+
+[Generation details and command](local/analytics/README.md).
+
 ```bash
 cd local
 python3 -m venv .venv

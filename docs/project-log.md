@@ -27,6 +27,8 @@ Last updated: 2026-11-23
   snapshots when choosing event predecessors. Legacy unmarked inputs are allowed.
 - GitHub Actions runs the local pytest suite on pushes to main and PRs.
   Tests use synthetic data and temporary directories, not local publication roots.
+- The README includes a reproducible aggregate chart generated from the latest
+  readable Gold vacancy-event interval; no vacancy-level data is committed.
 - Run tests from local/ with `.venv/bin/python -m pytest`.
 - Discovery scripts use ignored analysis/raw/. The former data/ archive is
   removed; the output-free notebook uses notebooks/samples/.
@@ -82,5 +84,5 @@ consumer or performance need. Keep README short and docs implementation-focused.
 
 ## Next step
 
-Produce a compact analytical example using the existing Gold queries.
-Keep CI green and documentation aligned with behavior.
+Keep CI green, documentation aligned with behavior, and refresh the committed
+analytical chart after meaningful new Gold intervals.

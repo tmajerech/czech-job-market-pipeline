@@ -6,6 +6,14 @@ Read [project-log.md](project-log.md) for current state and accepted decisions.
 
 ## Changes
 
+### 2026-11-23: Add a portfolio chart from Gold vacancy events
+
+Added a dependency-free SVG generator that selects the latest readable Gold
+event interval and charts the ten occupations with the most new and removed
+vacancy listings. The README embeds the generated aggregate output and links
+it to a reproducible command. Tests cover event-specific fact joins, current
+occupation labels, incomplete snapshot exclusion, and SVG escaping.
+
 ### 2026-11-23: Update the integration fixture sample path
 
 Updated the Bronze integration fixture to use notebooks/samples/ after the
